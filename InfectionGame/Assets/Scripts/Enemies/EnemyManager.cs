@@ -1,51 +1,53 @@
+using System.Collections;
 using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
-    [Header("Scriptable Objects")]
-    [SerializeField]
-    private EnemySpawnConfigSO spawnConfig;
+    [SerializeField] private EnemySpawnConfigSO spawnConfig;
+    [SerializeField] private Enemy enemyPrefab;
 
-    [Header("Prefab")]
-    [SerializeField]
-    private Enemy enemyPrefab;
+    private int currentEnemyCount;
 
     private void Start()
     {
-        SpawnEnemies();
+        StartCoroutine(SpawnEnemiesCoroutine());
     }
 
-    private void SpawnEnemies()
+    private IEnumerator SpawnEnemiesCoroutine()
     {
-        for (int i = 0; i < spawnConfig.enemyCount; i++)
+        while (currentEnemyCount < spawnConfig.maxEnemyCount)
         {
             SpawnEnemy();
+
+            currentEnemyCount++;
+
+            yield return new WaitForSeconds(
+                spawnConfig.spawnInterval
+            );
         }
     }
 
     private void SpawnEnemy()
     {
-        Vector3 position = GetRandomSpawnPosition();
+        Vector3 spawnPosition = GetRandomSpawnPosition();
 
         Instantiate(
             enemyPrefab,
-            position,
+            spawnPosition,
             Quaternion.identity
         );
     }
 
     private Vector3 GetRandomSpawnPosition()
     {
-        Vector2 circle =
-            Random.insideUnitCircle *
-            spawnConfig.spawnRadius;
+        Vector2 randomPoint =
+            Random.insideUnitCircle * spawnConfig.spawnRadius;
 
-        return transform.position +
-               new Vector3(
-                   circle.x,
-                   0f,
-                   circle.y
-               );
+        return transform.position + new Vector3(
+            randomPoint.x,
+            0f,
+            randomPoint.y
+        );
     }
 
     private void OnDrawGizmosSelected()

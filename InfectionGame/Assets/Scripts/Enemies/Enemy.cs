@@ -2,79 +2,109 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [Header("Scriptable Objects")]
+    [SerializeField] private EnemyConfigSO config;
+    [SerializeField] private PlayerReferenceSO playerReference;
+    [SerializeField] private EnemyRuntimeSetSO runtimeSet;
 
-    [SerializeField]
-    private EnemyConfigSO config;
+    private Rigidbody rb;
 
-    [SerializeField]
-    private PlayerReferenceSO playerReference;
+    private Vector3 passiveDirection;
+    private float directionTimer;
 
-    [SerializeField]
-    private EnemyRuntimeSetSO runtimeSet;
-
-    private bool isChasing;
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true;
+    }
 
     private void OnEnable()
     {
         if (runtimeSet != null)
-        {
             runtimeSet.Add(this);
-        }
     }
 
     private void OnDisable()
     {
         if (runtimeSet != null)
-        {
             runtimeSet.Remove(this);
-        }
     }
 
-    private void Update()
+    private void Start()
+    {
+        ChooseNewPassiveDirection();
+    }
+
+    private void FixedUpdate()
     {
         if (config == null)
             return;
 
-        if (playerReference == null)
-            return;
+        Transform player = null;
 
-        Transform player = playerReference.Player;
+        if (playerReference != null)
+            player = playerReference.Player;
 
-        if (player == null)
-            return;
-
-        float distanceToPlayer = Vector3.Distance(
-            transform.position,
-            player.position
-        );
-
-        isChasing = distanceToPlayer <= config.detectionRadius;
-
-        if (isChasing)
+        if (player != null)
         {
-            ChasePlayer(player);
+            Vector3 toPlayer = player.position - transform.position;
+            toPlayer.y = 0f;
+
+            float distance = toPlayer.magnitude;
+
+            if (distance <= config.detectionRadius)
+            {
+                ChasePlayer(toPlayer.normalized);
+                return;
+            }
         }
+
+        PassiveMove();
     }
 
-    private void ChasePlayer(Transform player)
+    private void ChasePlayer(Vector3 direction)
     {
-        Vector3 direction = player.position - transform.position;
+        Vector3 velocity = rb.linearVelocity;
 
-        // Чтобы враг не летал вверх/вниз
-        direction.y = 0f;
+        velocity.x = direction.x * config.moveSpeed;
+        velocity.z = direction.z * config.moveSpeed;
 
-        if (direction.sqrMagnitude <= 0.001f)
-            return;
+        rb.linearVelocity = velocity;
 
-        direction.Normalize();
+        if (direction != Vector3.zero)
+            transform.forward = direction;
+    }
 
-        transform.position +=
-            direction *
-            config.moveSpeed *
-            Time.deltaTime;
+    private void PassiveMove()
+    {
+        directionTimer -= Time.fixedDeltaTime;
 
-        transform.forward = direction;
+        if (directionTimer <= 0f)
+        {
+            ChooseNewPassiveDirection();
+        }
+
+        Vector3 velocity = rb.linearVelocity;
+
+        velocity.x = passiveDirection.x * config.passiveMoveSpeed;
+        velocity.z = passiveDirection.z * config.passiveMoveSpeed;
+
+        rb.linearVelocity = velocity;
+
+        if (passiveDirection != Vector3.zero)
+            transform.forward = passiveDirection;
+    }
+
+    private void ChooseNewPassiveDirection()
+    {
+        Vector2 randomDirection = Random.insideUnitCircle.normalized;
+
+        passiveDirection = new Vector3(
+            randomDirection.x,
+            0f,
+            randomDirection.y
+        );
+
+        directionTimer = config.changeDirectionTime;
     }
 
     private void OnDrawGizmosSelected()

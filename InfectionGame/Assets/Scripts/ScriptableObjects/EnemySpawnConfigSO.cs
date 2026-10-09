@@ -6,7 +6,7 @@ using UnityEngine;
 )]
 public class EnemySpawnConfigSO : ScriptableObject
 {
-    public int enemyCount = 100;
-
-    public float spawnRadius = 20f;
+    public int maxEnemyCount = 10000;
+    public float spawnRadius = 30f;
+    public float spawnInterval = 1f;
 }

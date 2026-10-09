@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: EnemyConfig
   m_EditorClassIdentifier: Assembly-CSharp::EnemyConfigSO
   moveSpeed: 3
-  detectionRadius: 5
+  detectionRadius: 15
+  passiveMoveSpeed: 1.5
+  changeDirectionTime: 3
