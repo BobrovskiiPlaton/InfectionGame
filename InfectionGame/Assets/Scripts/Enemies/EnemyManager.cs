@@ -6,11 +6,36 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private EnemySpawnConfigSO spawnConfig;
     [SerializeField] private Enemy enemyPrefab;
 
+    [SerializeField]
+    private EnemySpawnRequestSO spawnRequest;
+
     private int currentEnemyCount;
+    private float currentSpawnInterval;
+
+    private void OnEnable()
+    {
+        if (spawnRequest != null)
+        {
+            spawnRequest.OnSpawnRequested += SpawnEnemyAt;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (spawnRequest != null)
+        {
+            spawnRequest.OnSpawnRequested -= SpawnEnemyAt;
+        }
+    }
 
     private void Start()
     {
-        StartCoroutine(SpawnEnemiesCoroutine());
+        currentSpawnInterval =
+            spawnConfig.initialSpawnInterval;
+
+        StartCoroutine(
+            SpawnEnemiesCoroutine()
+        );
     }
 
     private IEnumerator SpawnEnemiesCoroutine()
@@ -19,35 +44,52 @@ public class EnemyManager : MonoBehaviour
         {
             SpawnEnemy();
 
-            currentEnemyCount++;
-
             yield return new WaitForSeconds(
-                spawnConfig.spawnInterval
+                currentSpawnInterval
             );
+
+            currentSpawnInterval -=
+                spawnConfig.intervalDecrease;
+
+            currentSpawnInterval =
+                Mathf.Max(
+                    currentSpawnInterval,
+                    spawnConfig.minimumSpawnInterval
+                );
         }
     }
 
     private void SpawnEnemy()
     {
-        Vector3 spawnPosition = GetRandomSpawnPosition();
+        Vector3 position =
+            GetRandomSpawnPosition();
 
+        SpawnEnemyAt(position);
+    }
+
+    public void SpawnEnemyAt(Vector3 position)
+    {
         Instantiate(
             enemyPrefab,
-            spawnPosition,
+            position,
             Quaternion.identity
         );
+
+        currentEnemyCount++;
     }
 
     private Vector3 GetRandomSpawnPosition()
     {
         Vector2 randomPoint =
-            Random.insideUnitCircle * spawnConfig.spawnRadius;
+            Random.insideUnitCircle *
+            spawnConfig.spawnRadius;
 
-        return transform.position + new Vector3(
-            randomPoint.x,
-            0f,
-            randomPoint.y
-        );
+        return transform.position +
+               new Vector3(
+                   randomPoint.x,
+                   spawnConfig.spawnHeight,
+                   randomPoint.y
+               );
     }
 
     private void OnDrawGizmosSelected()

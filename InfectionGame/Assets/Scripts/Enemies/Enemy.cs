@@ -1,15 +1,23 @@
+using System.Collections;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private EnemyConfigSO config;
+
+    [SerializeField] private EnemyRuntimeSetSO enemyRuntimeSet;
+    [SerializeField] private NPCRuntimeSetSO npcRuntimeSet;
     [SerializeField] private PlayerReferenceSO playerReference;
-    [SerializeField] private EnemyRuntimeSetSO runtimeSet;
 
     private Rigidbody rb;
 
     private Vector3 passiveDirection;
     private float directionTimer;
+
+    private Transform currentTarget;
+    private NPC currentTargetNPC;
+
+    private Coroutine attackCoroutine;
 
     private void Awake()
     {
@@ -19,14 +27,16 @@ public class Enemy : MonoBehaviour
 
     private void OnEnable()
     {
-        if (runtimeSet != null)
-            runtimeSet.Add(this);
+        if (enemyRuntimeSet != null)
+            enemyRuntimeSet.Add(this);
     }
 
     private void OnDisable()
     {
-        if (runtimeSet != null)
-            runtimeSet.Remove(this);
+        if (enemyRuntimeSet != null)
+            enemyRuntimeSet.Remove(this);
+
+        StopAttack();
     }
 
     private void Start()
@@ -39,39 +49,144 @@ public class Enemy : MonoBehaviour
         if (config == null)
             return;
 
-        Transform player = null;
+        FindTarget();
 
-        if (playerReference != null)
-            player = playerReference.Player;
-
-        if (player != null)
+        if (currentTarget == null)
         {
-            Vector3 toPlayer = player.position - transform.position;
-            toPlayer.y = 0f;
+            StopAttack();
+            PassiveMove();
+            return;
+        }
 
-            float distance = toPlayer.magnitude;
+        Vector3 toTarget =
+            currentTarget.position - transform.position;
 
-            if (distance <= config.detectionRadius)
+        toTarget.y = 0f;
+
+        float distance = toTarget.magnitude;
+
+        if (distance > config.detectionRadius)
+        {
+            currentTarget = null;
+            currentTargetNPC = null;
+
+            StopAttack();
+            PassiveMove();
+            return;
+        }
+
+        // Если преследуем NPC
+        if (currentTargetNPC != null)
+        {
+            NPCHealthState health =
+                currentTargetNPC.GetComponent<NPCHealthState>();
+
+            if (health != null &&
+                health.CurrentState == NPCState.Infected)
             {
-                ChasePlayer(toPlayer.normalized);
+                currentTarget = null;
+                currentTargetNPC = null;
+
+                StopAttack();
                 return;
+            }
+
+            // Запускаем корутину один раз
+            StartAttack();
+
+            if (distance <= config.attackDistance)
+            {
+                StopMovement();
+            }
+            else
+            {
+                Chase(toTarget.normalized);
+            }
+
+            return;
+        }
+
+        // Если цель — Player
+        StopAttack();
+        Chase(toTarget.normalized);
+    }
+
+    private void FindTarget()
+    {
+        currentTarget = null;
+        currentTargetNPC = null;
+
+        float nearestDistance = float.MaxValue;
+
+        // ===== PLAYER =====
+
+        if (playerReference != null &&
+            playerReference.Player != null)
+        {
+            float distance =
+                (playerReference.Player.position -
+                 transform.position)
+                .sqrMagnitude;
+
+            if (distance < nearestDistance)
+            {
+                nearestDistance = distance;
+                currentTarget = playerReference.Player;
+                currentTargetNPC = null;
             }
         }
 
-        PassiveMove();
+        // ===== NPC =====
+
+        if (npcRuntimeSet == null)
+            return;
+
+        foreach (NPC npc in npcRuntimeSet.NPCs)
+        {
+            if (npc == null)
+                continue;
+
+            NPCHealthState health =
+                npc.GetComponent<NPCHealthState>();
+
+            // Игнорируем заражённых NPC
+            if (health != null &&
+                health.CurrentState == NPCState.Infected)
+            {
+                continue;
+            }
+
+            float distance =
+                (npc.transform.position -
+                 transform.position)
+                .sqrMagnitude;
+
+            if (distance < nearestDistance)
+            {
+                nearestDistance = distance;
+
+                currentTarget = npc.transform;
+                currentTargetNPC = npc;
+            }
+        }
     }
 
-    private void ChasePlayer(Vector3 direction)
+    private void Chase(Vector3 direction)
     {
+        if (direction == Vector3.zero)
+            return;
+
         Vector3 velocity = rb.linearVelocity;
 
-        velocity.x = direction.x * config.moveSpeed;
-        velocity.z = direction.z * config.moveSpeed;
+        velocity.x =
+            direction.x * config.moveSpeed;
+
+        velocity.z =
+            direction.z * config.moveSpeed;
 
         rb.linearVelocity = velocity;
 
-        if (direction != Vector3.zero)
-            transform.forward = direction;
+        transform.forward = direction;
     }
 
     private void PassiveMove()
@@ -85,26 +200,105 @@ public class Enemy : MonoBehaviour
 
         Vector3 velocity = rb.linearVelocity;
 
-        velocity.x = passiveDirection.x * config.passiveMoveSpeed;
-        velocity.z = passiveDirection.z * config.passiveMoveSpeed;
+        velocity.x =
+            passiveDirection.x *
+            config.passiveMoveSpeed;
+
+        velocity.z =
+            passiveDirection.z *
+            config.passiveMoveSpeed;
 
         rb.linearVelocity = velocity;
 
         if (passiveDirection != Vector3.zero)
-            transform.forward = passiveDirection;
+        {
+            transform.forward =
+                passiveDirection;
+        }
     }
 
     private void ChooseNewPassiveDirection()
     {
-        Vector2 randomDirection = Random.insideUnitCircle.normalized;
+        Vector2 randomDirection =
+            Random.insideUnitCircle.normalized;
 
-        passiveDirection = new Vector3(
-            randomDirection.x,
-            0f,
-            randomDirection.y
-        );
+        passiveDirection =
+            new Vector3(
+                randomDirection.x,
+                0f,
+                randomDirection.y
+            );
 
-        directionTimer = config.changeDirectionTime;
+        directionTimer =
+            config.changeDirectionTime;
+    }
+
+    private void StartAttack()
+    {
+        if (attackCoroutine != null)
+            return;
+
+        attackCoroutine =
+            StartCoroutine(
+                AttackCoroutine()
+            );
+    }
+
+    private IEnumerator AttackCoroutine()
+    {
+        while (currentTargetNPC != null)
+        {
+            yield return new WaitForSeconds(
+                config.attackInterval
+            );
+
+            if (currentTargetNPC == null)
+                break;
+
+            NPCHealthState health =
+                currentTargetNPC.GetComponent<NPCHealthState>();
+
+            if (health == null)
+                break;
+
+            if (health.CurrentState == NPCState.Infected)
+                break;
+
+            Vector3 toNPC =
+                currentTargetNPC.transform.position -
+                transform.position;
+
+            toNPC.y = 0f;
+
+            float distance = toNPC.magnitude;
+
+            // Удар только если враг действительно догнал NPC
+            if (distance <= config.attackDistance)
+            {
+                health.ReceiveEnemyHit();
+            }
+        }
+
+        attackCoroutine = null;
+    }
+
+    private void StopAttack()
+    {
+        if (attackCoroutine == null)
+            return;
+
+        StopCoroutine(attackCoroutine);
+        attackCoroutine = null;
+    }
+
+    private void StopMovement()
+    {
+        Vector3 velocity = rb.linearVelocity;
+
+        velocity.x = 0f;
+        velocity.z = 0f;
+
+        rb.linearVelocity = velocity;
     }
 
     private void OnDrawGizmosSelected()

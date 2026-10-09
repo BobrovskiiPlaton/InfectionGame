@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4224989539297207045
+--- !u!1 &6084130216759217298
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,42 +8,41 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7007479041112335453}
-  - component: {fileID: 2565888702265578579}
+  - component: {fileID: 8887225255492824997}
+  - component: {fileID: 2676277527955937233}
   m_Layer: 0
-  m_Name: EnemyManager
+  m_Name: NPCManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7007479041112335453
+--- !u!4 &8887225255492824997
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4224989539297207045}
+  m_GameObject: {fileID: 6084130216759217298}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.82814, y: 0, z: 14.66127}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2565888702265578579
+--- !u!114 &2676277527955937233
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4224989539297207045}
+  m_GameObject: {fileID: 6084130216759217298}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16ab08882a8947747997487643b4798e, type: 3}
+  m_Script: {fileID: 11500000, guid: 308827be189d10142a142f3b9c015d99, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyManager
-  spawnConfig: {fileID: 11400000, guid: 7b6588fb2faa6034785bc85cc7b702dc, type: 2}
-  enemyPrefab: {fileID: 8070889541851973897, guid: c49d51a92d7016e4d933112cf4ea1479, type: 3}
-  spawnRequest: {fileID: 11400000, guid: 67c3b618c37921849bbba69bdffe6cb7, type: 2}
+  m_EditorClassIdentifier: Assembly-CSharp::NPCManager
+  spawnConfig: {fileID: 11400000, guid: 100edc2047bd47548a70a8bcd5a58ed4, type: 2}
+  npcPrefab: {fileID: 2642865243026092434, guid: 2e8e38bd824b68f459d1552edd101388, type: 3}

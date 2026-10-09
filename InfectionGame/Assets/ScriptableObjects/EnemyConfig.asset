@@ -16,3 +16,5 @@ MonoBehaviour:
   detectionRadius: 15
   passiveMoveSpeed: 1.5
   changeDirectionTime: 3
+  attackDistance: 1.5
+  attackInterval: 2
