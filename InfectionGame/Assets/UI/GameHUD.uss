@@ -1,0 +1,28 @@
+:root {
+}
+
+#HealthBar .unity-progress-bar__background {
+    background-color: rgb(57, 67, 79);
+}
+
+#HealthBar .unity-progress-bar__progress {
+    background-color: rgb(76, 175, 80);
+}
+
+#HealthBar .unity-progress-bar__title {
+    color: white;
+    -unity-text-align: middle-center;
+}
+
+#HealthpackCooldown .unity-progress-bar__background {
+    background-color: rgb(57, 67, 79);
+}
+
+#HealthpackCooldown .unity-progress-bar__progress {
+    background-color: rgb(33, 150, 243);
+}
+
+#HealthpackCooldown .unity-progress-bar__title {
+    color: white;
+    -unity-text-align: middle-center;
+}

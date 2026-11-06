@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 7700936}
   - component: {fileID: 7700935}
   - component: {fileID: 7700934}
+  - component: {fileID: 7700938}
   m_Layer: 0
   m_Name: HealingField (1)
   m_TagString: Untagged
@@ -244,6 +245,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7700932}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &7700938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7700932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72f3069311cdc0342a424ba548ae3cb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MedkitStation
+  config: {fileID: 11400000, guid: 3dfd33941bd20b8408a7619aac9bd6c3, type: 2}
 --- !u!1 &99283787
 GameObject:
   m_ObjectHideFlags: 0
@@ -356,6 +370,76 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 99283787}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &132131549
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 132131551}
+  - component: {fileID: 132131550}
+  - component: {fileID: 132131552}
+  m_Layer: 5
+  m_Name: GameHUD
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &132131550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 132131549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: 04a0280da733b3a4981a0a575180eefa, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 1439d23077213cd4081a54c55b26a5c7, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!4 &132131551
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 132131549}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &132131552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 132131549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d309b8ef6079b149a7a917f5e88074b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameHUDController
+  playerHealth: {fileID: 1626412095}
+  infectionUpdateInterval: 0.5
 --- !u!1 &251374734
 GameObject:
   m_ObjectHideFlags: 0
@@ -369,6 +453,7 @@ GameObject:
   - component: {fileID: 251374736}
   - component: {fileID: 251374735}
   - component: {fileID: 251374739}
+  - component: {fileID: 251374740}
   m_Layer: 0
   m_Name: HealingField
   m_TagString: Untagged
@@ -481,6 +566,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97b037d03eba20e44bf1c77e6692c211, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealingField
+--- !u!114 &251374740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 251374734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72f3069311cdc0342a424ba548ae3cb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MedkitStation
+  config: {fileID: 11400000, guid: 3dfd33941bd20b8408a7619aac9bd6c3, type: 2}
 --- !u!1 &256680860
 GameObject:
   m_ObjectHideFlags: 0
@@ -631,6 +729,7 @@ GameObject:
   - component: {fileID: 438799474}
   - component: {fileID: 438799473}
   - component: {fileID: 438799472}
+  - component: {fileID: 438799476}
   m_Layer: 0
   m_Name: HealingField (4)
   m_TagString: Untagged
@@ -743,6 +842,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 438799470}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &438799476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 438799470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72f3069311cdc0342a424ba548ae3cb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MedkitStation
+  config: {fileID: 11400000, guid: 3dfd33941bd20b8408a7619aac9bd6c3, type: 2}
 --- !u!1 &551000001
 GameObject:
   m_ObjectHideFlags: 0
@@ -882,6 +994,7 @@ GameObject:
   - component: {fileID: 627190100}
   - component: {fileID: 627190099}
   - component: {fileID: 627190098}
+  - component: {fileID: 627190102}
   m_Layer: 0
   m_Name: HealingField (5)
   m_TagString: Untagged
@@ -994,6 +1107,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 627190096}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &627190102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 627190096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72f3069311cdc0342a424ba548ae3cb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MedkitStation
+  config: {fileID: 11400000, guid: 3dfd33941bd20b8408a7619aac9bd6c3, type: 2}
 --- !u!1 &661153628
 GameObject:
   m_ObjectHideFlags: 0
@@ -1396,6 +1522,7 @@ GameObject:
   - component: {fileID: 793470632}
   - component: {fileID: 793470631}
   - component: {fileID: 793470630}
+  - component: {fileID: 793470634}
   m_Layer: 0
   m_Name: HealingField (6)
   m_TagString: Untagged
@@ -1508,6 +1635,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 793470628}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &793470634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 793470628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72f3069311cdc0342a424ba548ae3cb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MedkitStation
+  config: {fileID: 11400000, guid: 3dfd33941bd20b8408a7619aac9bd6c3, type: 2}
 --- !u!1 &879302320
 GameObject:
   m_ObjectHideFlags: 0
@@ -1521,6 +1661,7 @@ GameObject:
   - component: {fileID: 879302324}
   - component: {fileID: 879302323}
   - component: {fileID: 879302322}
+  - component: {fileID: 879302326}
   m_Layer: 0
   m_Name: HealingField (2)
   m_TagString: Untagged
@@ -1633,6 +1774,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 879302320}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &879302326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 879302320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72f3069311cdc0342a424ba548ae3cb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MedkitStation
+  config: {fileID: 11400000, guid: 3dfd33941bd20b8408a7619aac9bd6c3, type: 2}
 --- !u!1 &1004573513
 GameObject:
   m_ObjectHideFlags: 0
@@ -1688,6 +1842,7 @@ GameObject:
   - component: {fileID: 1080243810}
   - component: {fileID: 1080243809}
   - component: {fileID: 1080243808}
+  - component: {fileID: 1080243812}
   m_Layer: 0
   m_Name: HealingField (3)
   m_TagString: Untagged
@@ -1800,6 +1955,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1080243806}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1080243812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1080243806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72f3069311cdc0342a424ba548ae3cb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MedkitStation
+  config: {fileID: 11400000, guid: 3dfd33941bd20b8408a7619aac9bd6c3, type: 2}
 --- !u!1 &1158239798
 GameObject:
   m_ObjectHideFlags: 0
@@ -2616,6 +2784,7 @@ GameObject:
   - component: {fileID: 1626412092}
   - component: {fileID: 1626412094}
   - component: {fileID: 551000021}
+  - component: {fileID: 1626412095}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2776,6 +2945,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerRegister
   playerReference: {fileID: 11400000, guid: 8c83754bd70127d4d9929012f0ebe88d, type: 2}
+--- !u!114 &1626412095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1626412087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41c2d718136a6124eb086451d7f2770b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  maxHealth: 100
 --- !u!1 &1797882164
 GameObject:
   m_ObjectHideFlags: 0
@@ -3676,3 +3858,4 @@ SceneRoots:
   - {fileID: 551000012}
   - {fileID: 771000002}
   - {fileID: 1874278272}
+  - {fileID: 132131551}
