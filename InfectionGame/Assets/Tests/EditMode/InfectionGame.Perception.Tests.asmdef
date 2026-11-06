@@ -11,7 +11,10 @@
         "Unity.Transforms",
         "Unity.Mathematics",
         "Unity.Collections",
-        "Unity.Core"
+        "Unity.Core",
+        "Unity.Behavior",
+        "InfectionGame.Enemies.ECS",
+        "InfectionGame.Actors"
     ],
     "includePlatforms": [
         "Editor"

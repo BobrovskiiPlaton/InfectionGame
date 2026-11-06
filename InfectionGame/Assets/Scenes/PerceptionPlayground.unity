@@ -132,12 +132,12 @@ GameObject:
   - component: {fileID: 661000004}
   - component: {fileID: 661000005}
   m_Layer: 0
-  m_Name: Vision Probe (Narrow)
+  m_Name: DISABLED Vision Probe (Narrow)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &661000002
 Transform:
   m_ObjectHideFlags: 0
@@ -241,12 +241,12 @@ GameObject:
   - component: {fileID: 661000014}
   - component: {fileID: 661000015}
   m_Layer: 0
-  m_Name: Vision Probe (Wide)
+  m_Name: DISABLED Vision Probe (Wide)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &661000012
 Transform:
   m_ObjectHideFlags: 0
@@ -337,7 +337,7 @@ MonoBehaviour:
   visionRange: 25
   fieldOfViewDegrees: 180
   eyeOffsetLocal: {x: 0, y: 1.6, z: 0}
---- !u!1 &661000021
+--- !u!1 &661000031
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -345,47 +345,47 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 661000022}
-  - component: {fileID: 661000023}
-  - component: {fileID: 661000024}
-  - component: {fileID: 661000025}
+  - component: {fileID: 661000032}
+  - component: {fileID: 661000033}
+  - component: {fileID: 661000034}
+  - component: {fileID: 661000035}
   m_Layer: 0
-  m_Name: NPC Target
+  m_Name: Enemy (ECS)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &661000022
+--- !u!4 &661000032
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 661000021}
+  m_GameObject: {fileID: 661000031}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 5}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: -0.7071068}
+  m_LocalPosition: {x: 20, y: 1.6, z: 0.35}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &661000023
+  m_LocalEulerAnglesHint: {x: 0, y: 270, z: 0}
+--- !u!33 &661000033
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 661000021}
-  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &661000024
+  m_GameObject: {fileID: 661000031}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &661000034
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 661000021}
+  m_GameObject: {fileID: 661000031}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -404,7 +404,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ce32ad8a326d4214a06809814b78a631, type: 2}
+  - {fileID: 2100000, guid: 2835208bc3b7f794585f92348e1a032c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -428,24 +428,23 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &661000025
+--- !u!114 &661000035
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 661000021}
+  m_GameObject: {fileID: 661000031}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96d069b5fe0205247ba5e6e817eb4bbb, type: 3}
+  m_Script: {fileID: 11500000, guid: ed987b93f2d750f41a599eefc794fe47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  faction: 2
-  detectable: 1
+  species: {fileID: 11400000, guid: 34685d5aee3a4c7ab536e1044ee7cdc4, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 661000002}
   - {fileID: 661000012}
-  - {fileID: 661000022}
+  - {fileID: 661000032}

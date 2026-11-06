@@ -46,6 +46,18 @@ namespace InfectionGame.Perception
         public float3 EyeOffsetLocal;
     }
 
+    /// <summary>
+    /// Слух. Всенаправленный: направление взгляда не важно, только расстояние. Radius = 0
+    /// означает "глухой" — компонент при этом остаётся, чтобы форма запроса была одинаковой
+    /// для всех сенсоров. У врагов слабый слух (единицы метров), поэтому он ловит только
+    /// того, кто подкрался близко — в том числе со спины, куда не достаёт зрение.
+    /// </summary>
+    public struct HearingSensor : IComponentData
+    {
+        // Радиус слуха в метрах
+        public float Radius;
+    }
+
     public struct DetectedTarget : IBufferElementData
     {
         public Entity Target;

@@ -87,5 +87,20 @@ namespace InfectionGame.Perception
             timeSinceSensed += math.max(0f, deltaTime);
             return timeSinceSensed <= math.max(0f, memoryDuration);
         }
+
+        /// <summary>
+        /// Слух всенаправленный: направление взгляда не важно, только расстояние до слушателя.
+        /// </summary>
+        public static bool IsHearable(
+            float3 listenerPosition,
+            float3 targetPosition,
+            float hearingRadius)
+        {
+            if (hearingRadius <= 0f)
+                return false;
+
+            return math.distancesq(listenerPosition, targetPosition)
+                   <= hearingRadius * hearingRadius;
+        }
     }
 }

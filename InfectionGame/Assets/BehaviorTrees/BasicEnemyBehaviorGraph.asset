@@ -1,0 +1,1024 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7876902765635407383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b27bb6d9a2c8d540a10dff10acc543e, type: 3}
+  m_Name: BasicEnemyBehaviorGraph Debug Info
+  m_EditorClassIdentifier: Unity.Behavior::Unity.Behavior.BehaviorGraphDebugInfo
+  m_CodeBreakPointsList: []
+--- !u!114 &-4460131591462010040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c02bb70996b49eba31d0c206e28da24, type: 3}
+  m_Name: BasicEnemyBehaviorGraph Blackboard
+  m_EditorClassIdentifier: Unity.Behavior::Unity.Behavior.RuntimeBlackboardAsset
+  VersionTimestamp: 639295815348504544
+  AssetID:
+    m_Value0: 0
+    m_Value1: 0
+  m_Blackboard:
+    m_Variables:
+    - rid: 1384620639482282051
+  m_SharedBlackboardVariableGuids: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 1384620639482282051
+      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 1
+          m_Value1: 0
+        Name: Self
+        m_Value: {fileID: 0}
+--- !u!114 &-376817774139861446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db920e62f70f420bb33c771449926fa4, type: 3}
+  m_Name: BasicEnemyBehaviorGraph
+  m_EditorClassIdentifier: Unity.Behavior::Unity.Behavior.BehaviorGraph
+  Graphs:
+  - rid: 1384620639482282052
+  m_DebugInfo: {fileID: -7876902765635407383}
+  m_WasCompileWithPlaceholderNode: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 1384620639482282052
+      type: {class: BehaviorGraphModule, ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        AuthoringAssetID:
+          m_Value0: 8359391149213146247
+          m_Value1: 9059646311671767659
+        m_DebugInfo: {fileID: -7876902765635407383}
+        BlackboardReference:
+          rid: 1384620639482282053
+        BlackboardGroupReferences: []
+        Root:
+          rid: 1384620640727990475
+        m_VersionTimestamp: 639295870065875773
+    - rid: 1384620639482282053
+      type: {class: BlackboardReference, ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        m_Blackboard:
+          rid: 1384620639482282055
+        m_Source: {fileID: -4460131591462010040}
+    - rid: 1384620639482282055
+      type: {class: Blackboard, ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        m_Variables:
+        - rid: 1384620640727990477
+    - rid: 1384620640727990356
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 0.5
+    - rid: 1384620640727990359
+      type: {class: 'BlackboardVariable`1[[InfectionGame.Enemies.ECS.EnemyState, InfectionGame.Enemies.ECS]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 1
+    - rid: 1384620640727990419
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 6
+    - rid: 1384620640727990420
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 10
+    - rid: 1384620640727990421
+      type: {class: 'BlackboardVariable`1[[InfectionGame.Enemies.ECS.EnemyState, InfectionGame.Enemies.ECS]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 0
+    - rid: 1384620640727990447
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 2
+    - rid: 1384620640727990461
+      type: {class: 'BlackboardVariable`1[[InfectionGame.Enemies.ECS.EnemyState, InfectionGame.Enemies.ECS]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 2
+    - rid: 1384620640727990475
+      type: {class: Start, ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        ID:
+          m_Value0: 761250064389252912
+          m_Value1: 770972650005678963
+        Graph:
+          rid: 1384620639482282052
+        m_Parent:
+          rid: -2
+        m_Child:
+          rid: 1384620640727990476
+        Repeat: 1
+        AllowMultipleRepeatsPerTick: 0
+    - rid: 1384620640727990476
+      type: {class: SelectorComposite, ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        ID:
+          m_Value0: 14876297682255877521
+          m_Value1: 886637848519605252
+        Graph:
+          rid: 1384620639482282052
+        m_Parent:
+          rid: 1384620640727990475
+        m_Children:
+        - rid: 1384620640727990478
+        - rid: 1384620640727990479
+        m_RegisteredObservers:
+        - Observer:
+            rid: 1384620640727990478
+    - rid: 1384620640727990477
+      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 1
+          m_Value1: 0
+        Name: Self
+        m_Value: {fileID: 0}
+    - rid: 1384620640727990478
+      type: {class: ConditionalGuardModifier, ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        ID:
+          m_Value0: 7108321811968199020
+          m_Value1: 9772271461348226953
+        Graph:
+          rid: 1384620639482282052
+        m_Parent:
+          rid: 1384620640727990476
+        m_Child:
+          rid: 1384620640727990480
+        m_Conditions:
+        - rid: 1384620640727990481
+        m_RequiresAllConditions: 0
+        m_ObserverType: 2
+    - rid: 1384620640727990479
+      type: {class: SequenceComposite, ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        ID:
+          m_Value0: 5642248402488948531
+          m_Value1: 5038257943381567761
+        Graph:
+          rid: 1384620639482282052
+        m_Parent:
+          rid: 1384620640727990476
+        m_Children:
+        - rid: 1384620640727990482
+        - rid: 1384620640727990483
+        m_RegisteredObservers: []
+    - rid: 1384620640727990480
+      type: {class: SelectorComposite, ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        ID:
+          m_Value0: 15453689651316057360
+          m_Value1: 13593524749629360989
+        Graph:
+          rid: 1384620639482282052
+        m_Parent:
+          rid: 1384620640727990478
+        m_Children:
+        - rid: 1384620640727990484
+        - rid: 1384620640727990485
+        m_RegisteredObservers:
+        - Observer:
+            rid: 1384620640727990484
+    - rid: 1384620640727990481
+      type: {class: HasPerceivedTargetCondition, ns: InfectionGame.Enemies.Behavior, asm: InfectionGame.Enemies.ECS}
+      data:
+        Graph:
+          rid: 1384620639482282052
+        MemoryGraceSeconds:
+          rid: 1384620640727990356
+    - rid: 1384620640727990482
+      type: {class: SetEnemyStateAction, ns: InfectionGame.Enemies.Behavior, asm: InfectionGame.Enemies.ECS}
+      data:
+        ID:
+          m_Value0: 9186839143211065028
+          m_Value1: 2166498671023809870
+        Graph:
+          rid: 1384620639482282052
+        m_Parent:
+          rid: 1384620640727990479
+        State:
+          rid: 1384620640727990421
+    - rid: 1384620640727990483
+      type: {class: ChooseWanderTargetAction, ns: InfectionGame.Enemies.Behavior, asm: InfectionGame.Enemies.ECS}
+      data:
+        ID:
+          m_Value0: 2503795836608731260
+          m_Value1: 14093883888232724270
+        Graph:
+          rid: 1384620639482282052
+        m_Parent:
+          rid: 1384620640727990479
+        Radius:
+          rid: 1384620640727990419
+        RestartAfterSeconds:
+          rid: 1384620640727990420
+    - rid: 1384620640727990484
+      type: {class: ConditionalGuardModifier, ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        ID:
+          m_Value0: 9623559371347974719
+          m_Value1: 16784776388729942954
+        Graph:
+          rid: 1384620639482282052
+        m_Parent:
+          rid: 1384620640727990480
+        m_Child:
+          rid: 1384620640727990486
+        m_Conditions:
+        - rid: 1384620640727990487
+        m_RequiresAllConditions: 0
+        m_ObserverType: 1
+    - rid: 1384620640727990485
+      type: {class: SetEnemyStateAction, ns: InfectionGame.Enemies.Behavior, asm: InfectionGame.Enemies.ECS}
+      data:
+        ID:
+          m_Value0: 7392090945779272082
+          m_Value1: 17268018075688561915
+        Graph:
+          rid: 1384620639482282052
+        m_Parent:
+          rid: 1384620640727990480
+        State:
+          rid: 1384620640727990359
+    - rid: 1384620640727990486
+      type: {class: SetEnemyStateAction, ns: InfectionGame.Enemies.Behavior, asm: InfectionGame.Enemies.ECS}
+      data:
+        ID:
+          m_Value0: 12610168854247943215
+          m_Value1: 13142987662005279742
+        Graph:
+          rid: 1384620639482282052
+        m_Parent:
+          rid: 1384620640727990484
+        State:
+          rid: 1384620640727990461
+    - rid: 1384620640727990487
+      type: {class: IsTargetInRangeCondition, ns: InfectionGame.Enemies.Behavior, asm: InfectionGame.Enemies.ECS}
+      data:
+        Graph:
+          rid: 1384620639482282052
+        Distance:
+          rid: 1384620640727990447
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bad8f2220607dac4db5082ff333fafb8, type: 3}
+  m_Name: BasicEnemyBehaviorGraph
+  m_EditorClassIdentifier: Unity.Behavior.Authoring::Unity.Behavior.BehaviorAuthoringGraph
+  Blackboard: {fileID: 5395720699162235475}
+  m_Description: 
+  m_Nodes:
+  - rid: 1384620639482282057
+  - rid: 1384620639482282060
+  - rid: 1384620639482282078
+  - rid: 1384620639482282098
+  - rid: 1384620639482282115
+  - rid: 1384620639482282200
+  - rid: 1384620639482282238
+  - rid: 1384620639482282272
+  - rid: 1384620639482282324
+  - rid: 1384620640727990340
+  m_VersionTimestamp: 639295870065875773
+  m_SerializedVersion: 3
+  m_DebugInfo: {fileID: -7876902765635407383}
+  m_RuntimeGraph: {fileID: -376817774139861446}
+  AssetID:
+    m_Value0: 8359391149213146247
+    m_Value1: 9059646311671767659
+  Story:
+    Story: 
+    StoryVariableNames: []
+    Variables: []
+  m_NodeModelsInfo:
+  - Name: On Start
+    Story: 
+    RuntimeTypeString: Unity.Behavior.Start, Unity.Behavior, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    RuntimeTypeID:
+      m_Value0: 3335272451348827663
+      m_Value1: 11549843281177505721
+    Variables: []
+    NamedChildren: []
+    IsPlaceholder: 0
+  - Name: Try In Order
+    Story: 
+    RuntimeTypeString: Unity.Behavior.SelectorComposite, Unity.Behavior, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    RuntimeTypeID:
+      m_Value0: 11477120919463386923
+      m_Value1: 7730102824742023565
+    Variables: []
+    NamedChildren: []
+    IsPlaceholder: 0
+  - Name: Choose Wander Target
+    Story: 'Choose Wander Target In Radius [Radius] Restart After [RestartAfterSeconds]'
+    RuntimeTypeString: InfectionGame.Enemies.Behavior.ChooseWanderTargetAction, InfectionGame.Enemies.ECS,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    RuntimeTypeID:
+      m_Value0: 2961125511995376562
+      m_Value1: 1337726862492453690
+    Variables:
+    - Name: Radius
+      Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      Tooltip: 
+    - Name: RestartAfterSeconds
+      Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      Tooltip: 
+    NamedChildren: []
+    IsPlaceholder: 0
+  - Name: Set Enemy State
+    Story: 'Set Enemy State To [State]'
+    RuntimeTypeString: InfectionGame.Enemies.Behavior.SetEnemyStateAction, InfectionGame.Enemies.ECS,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    RuntimeTypeID:
+      m_Value0: 1731624048724783777
+      m_Value1: 10416683471296215593
+    Variables:
+    - Name: State
+      Type:
+        m_SerializableType: InfectionGame.Enemies.ECS.EnemyState, InfectionGame.Enemies.ECS,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      Tooltip: 
+    NamedChildren: []
+    IsPlaceholder: 0
+  - Name: Conditional Guard (Modifier)
+    Story: 
+    RuntimeTypeString: Unity.Behavior.ConditionalGuardModifier, Unity.Behavior, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    RuntimeTypeID:
+      m_Value0: 3048858705937822632
+      m_Value1: 3282115049331433116
+    Variables: []
+    NamedChildren: []
+    IsPlaceholder: 0
+  - Name: Sequence
+    Story: 
+    RuntimeTypeString: Unity.Behavior.SequenceComposite, Unity.Behavior, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    RuntimeTypeID:
+      m_Value0: 10181448252506100447
+      m_Value1: 8737116843063128493
+    Variables: []
+    NamedChildren: []
+    IsPlaceholder: 0
+  m_Blackboards: []
+  m_MainBlackboardAuthoringAsset: {fileID: 5395720699162235475}
+  m_CommandBuffer:
+    m_Commands: []
+  m_SubgraphsInfo: []
+  m_BlackboardMissingManagedRef: 0
+  m_GraphMissingManagedRef: 0
+  m_HasMissingTypeInManagedRef: 0
+  m_EnumDependencyCache:
+    Entries:
+    - EnumTypeId: InfectionGame.Enemies.ECS.EnemyState, InfectionGame.Enemies.ECS
+      SignatureHash: 8945df3b0865579d2f44b23b6f0cf0d1
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 1384620639482282057
+      type: {class: StartNodeModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        Position: {x: 0, y: 0}
+        ID:
+          m_Value0: 761250064389252912
+          m_Value1: 770972650005678963
+        Parents: []
+        PortModels:
+        - rid: 1384620639482282058
+        NodeType:
+          m_SerializableType: Unity.Behavior.Start, Unity.Behavior, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        NodeTypeID:
+          m_Value0: 3335272451348827663
+          m_Value1: 11549843281177505721
+        m_FieldValues: []
+        Repeat: 1
+        AllowMultipleRepeatsPerTick: 0
+    - rid: 1384620639482282058
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: OutputPort
+        m_PortDataFlowType: 1
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 1384620639482282057
+        m_Connections:
+        - rid: 1384620639482282061
+    - rid: 1384620639482282060
+      type: {class: CompositeNodeModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        Position: {x: -0.38794732, y: 142.59668}
+        ID:
+          m_Value0: 14876297682255877521
+          m_Value1: 886637848519605252
+        Parents: []
+        PortModels:
+        - rid: 1384620639482282061
+        - rid: 1384620639482282062
+        NodeType:
+          m_SerializableType: Unity.Behavior.SelectorComposite, Unity.Behavior, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        NodeTypeID:
+          m_Value0: 11477120919463386923
+          m_Value1: 7730102824742023565
+        m_FieldValues: []
+    - rid: 1384620639482282061
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: InputPort
+        m_PortDataFlowType: 0
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 1384620639482282060
+        m_Connections:
+        - rid: 1384620639482282058
+    - rid: 1384620639482282062
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: OutputPort
+        m_PortDataFlowType: 1
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 1384620639482282060
+        m_Connections:
+        - rid: 1384620639482282116
+        - rid: 1384620640727990341
+    - rid: 1384620639482282078
+      type: {class: ActionNodeModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        Position: {x: 407.69788, y: 365.30902}
+        ID:
+          m_Value0: 2503795836608731260
+          m_Value1: 14093883888232724270
+        Parents: []
+        PortModels:
+        - rid: 1384620639482282079
+        - rid: 1384620639482282080
+        NodeType:
+          m_SerializableType: InfectionGame.Enemies.Behavior.ChooseWanderTargetAction,
+            InfectionGame.Enemies.ECS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        NodeTypeID:
+          m_Value0: 2961125511995376562
+          m_Value1: 1337726862492453690
+        m_FieldValues:
+        - rid: 1384620639482282081
+        - rid: 1384620640487866368
+    - rid: 1384620639482282079
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: InputPort
+        m_PortDataFlowType: 0
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 1384620639482282078
+        m_Connections:
+        - rid: 1384620640727990342
+    - rid: 1384620639482282080
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: OutputPort
+        m_PortDataFlowType: 1
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 1384620639482282078
+        m_Connections: []
+    - rid: 1384620639482282081
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: Radius
+        Type:
+          m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        LocalValue:
+          rid: 1384620639482282082
+        LinkedVariable:
+          rid: -2
+    - rid: 1384620639482282082
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 6
+    - rid: 1384620639482282098
+      type: {class: ActionNodeModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        Position: {x: 48.022163, y: 356.13428}
+        ID:
+          m_Value0: 9186839143211065028
+          m_Value1: 2166498671023809870
+        Parents: []
+        PortModels:
+        - rid: 1384620639482282099
+        - rid: 1384620639482282100
+        NodeType:
+          m_SerializableType: InfectionGame.Enemies.Behavior.SetEnemyStateAction,
+            InfectionGame.Enemies.ECS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        NodeTypeID:
+          m_Value0: 1731624048724783777
+          m_Value1: 10416683471296215593
+        m_FieldValues:
+        - rid: 1384620639482282113
+    - rid: 1384620639482282099
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: InputPort
+        m_PortDataFlowType: 0
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 1384620639482282098
+        m_Connections:
+        - rid: 1384620640727990342
+    - rid: 1384620639482282100
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: OutputPort
+        m_PortDataFlowType: 1
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 1384620639482282098
+        m_Connections: []
+    - rid: 1384620639482282113
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: State
+        Type:
+          m_SerializableType: InfectionGame.Enemies.ECS.EnemyState, InfectionGame.Enemies.ECS,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        LocalValue:
+          rid: 1384620639482282114
+        LinkedVariable:
+          rid: -2
+    - rid: 1384620639482282114
+      type: {class: 'BlackboardVariable`1[[InfectionGame.Enemies.ECS.EnemyState, InfectionGame.Enemies.ECS]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 0
+    - rid: 1384620639482282115
+      type: {class: ConditionalGuardNodeModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        Position: {x: -300.6212, y: 240.56932}
+        ID:
+          m_Value0: 7108321811968199020
+          m_Value1: 9772271461348226953
+        Parents: []
+        PortModels:
+        - rid: 1384620639482282116
+        - rid: 1384620639482282117
+        NodeType:
+          m_SerializableType: Unity.Behavior.ConditionalGuardModifier, Unity.Behavior,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        NodeTypeID:
+          m_Value0: 3048858705937822632
+          m_Value1: 3282115049331433116
+        m_FieldValues: []
+        m_Mode: 1
+        <ConditionModels>k__BackingField:
+        - rid: 1384620639482282133
+        <RequiresAllConditionsTrue>k__BackingField: 0
+        <ShouldTruncateNodeUI>k__BackingField: 0
+        <ObserverType>k__BackingField: 2
+    - rid: 1384620639482282116
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: InputPort
+        m_PortDataFlowType: 0
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 1384620639482282115
+        m_Connections:
+        - rid: 1384620639482282062
+    - rid: 1384620639482282117
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: OutputPort
+        m_PortDataFlowType: 1
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 1384620639482282115
+        m_Connections:
+        - rid: 1384620639482282201
+    - rid: 1384620639482282133
+      type: {class: ConditionModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        ConditionType:
+          m_SerializableType: InfectionGame.Enemies.Behavior.HasPerceivedTargetCondition,
+            InfectionGame.Enemies.ECS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        ConditionTypeID:
+          m_Value0: 11599558328718828785
+          m_Value1: 14463212303359918769
+        NodeModel:
+          rid: 1384620639482282115
+        m_FieldValues:
+        - rid: 1384620639482282134
+        OperatorFieldModel:
+          rid: -2
+    - rid: 1384620639482282134
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: MemoryGraceSeconds
+        Type:
+          m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        LocalValue:
+          rid: 1384620639482282135
+        LinkedVariable:
+          rid: -2
+    - rid: 1384620639482282135
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 0.5
+    - rid: 1384620639482282200
+      type: {class: CompositeNodeModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        Position: {x: -314.40936, y: 381.21198}
+        ID:
+          m_Value0: 15453689651316057360
+          m_Value1: 13593524749629360989
+        Parents: []
+        PortModels:
+        - rid: 1384620639482282201
+        - rid: 1384620639482282202
+        NodeType:
+          m_SerializableType: Unity.Behavior.SelectorComposite, Unity.Behavior, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        NodeTypeID:
+          m_Value0: 11477120919463386923
+          m_Value1: 7730102824742023565
+        m_FieldValues: []
+    - rid: 1384620639482282201
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: InputPort
+        m_PortDataFlowType: 0
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 1384620639482282200
+        m_Connections:
+        - rid: 1384620639482282117
+    - rid: 1384620639482282202
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: OutputPort
+        m_PortDataFlowType: 1
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 1384620639482282200
+        m_Connections:
+        - rid: 1384620639482282239
+        - rid: 1384620639482282273
+    - rid: 1384620639482282238
+      type: {class: ActionNodeModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        Position: {x: -163.1923, y: 501.0223}
+        ID:
+          m_Value0: 7392090945779272082
+          m_Value1: 17268018075688561915
+        Parents: []
+        PortModels:
+        - rid: 1384620639482282239
+        - rid: 1384620639482282240
+        NodeType:
+          m_SerializableType: InfectionGame.Enemies.Behavior.SetEnemyStateAction,
+            InfectionGame.Enemies.ECS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        NodeTypeID:
+          m_Value0: 1731624048724783777
+          m_Value1: 10416683471296215593
+        m_FieldValues:
+        - rid: 1384620639482282241
+    - rid: 1384620639482282239
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: InputPort
+        m_PortDataFlowType: 0
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 1384620639482282238
+        m_Connections:
+        - rid: 1384620639482282202
+    - rid: 1384620639482282240
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: OutputPort
+        m_PortDataFlowType: 1
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 1384620639482282238
+        m_Connections: []
+    - rid: 1384620639482282241
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: State
+        Type:
+          m_SerializableType: InfectionGame.Enemies.ECS.EnemyState, InfectionGame.Enemies.ECS,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        LocalValue:
+          rid: 1384620639482282242
+        LinkedVariable:
+          rid: -2
+    - rid: 1384620639482282242
+      type: {class: 'BlackboardVariable`1[[InfectionGame.Enemies.ECS.EnemyState, InfectionGame.Enemies.ECS]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 1
+    - rid: 1384620639482282272
+      type: {class: ConditionalGuardNodeModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        Position: {x: -490.38516, y: 477.30624}
+        ID:
+          m_Value0: 9623559371347974719
+          m_Value1: 16784776388729942954
+        Parents: []
+        PortModels:
+        - rid: 1384620639482282273
+        - rid: 1384620639482282274
+        NodeType:
+          m_SerializableType: Unity.Behavior.ConditionalGuardModifier, Unity.Behavior,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        NodeTypeID:
+          m_Value0: 3048858705937822632
+          m_Value1: 3282115049331433116
+        m_FieldValues: []
+        m_Mode: 1
+        <ConditionModels>k__BackingField:
+        - rid: 1384620639482282296
+        <RequiresAllConditionsTrue>k__BackingField: 0
+        <ShouldTruncateNodeUI>k__BackingField: 0
+        <ObserverType>k__BackingField: 1
+    - rid: 1384620639482282273
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: InputPort
+        m_PortDataFlowType: 0
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 1384620639482282272
+        m_Connections:
+        - rid: 1384620639482282202
+    - rid: 1384620639482282274
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: OutputPort
+        m_PortDataFlowType: 1
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 1384620639482282272
+        m_Connections:
+        - rid: 1384620639482282325
+    - rid: 1384620639482282296
+      type: {class: ConditionModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        ConditionType:
+          m_SerializableType: InfectionGame.Enemies.Behavior.IsTargetInRangeCondition,
+            InfectionGame.Enemies.ECS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        ConditionTypeID:
+          m_Value0: 4190907350731052227
+          m_Value1: 3752220385528863819
+        NodeModel:
+          rid: 1384620639482282272
+        m_FieldValues:
+        - rid: 1384620639482282297
+        OperatorFieldModel:
+          rid: -2
+    - rid: 1384620639482282297
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: Distance
+        Type:
+          m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        LocalValue:
+          rid: 1384620639482282298
+        LinkedVariable:
+          rid: -2
+    - rid: 1384620639482282298
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 2
+    - rid: 1384620639482282324
+      type: {class: ActionNodeModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        Position: {x: -495.15936, y: 585.557}
+        ID:
+          m_Value0: 12610168854247943215
+          m_Value1: 13142987662005279742
+        Parents: []
+        PortModels:
+        - rid: 1384620639482282325
+        - rid: 1384620639482282326
+        NodeType:
+          m_SerializableType: InfectionGame.Enemies.Behavior.SetEnemyStateAction,
+            InfectionGame.Enemies.ECS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        NodeTypeID:
+          m_Value0: 1731624048724783777
+          m_Value1: 10416683471296215593
+        m_FieldValues:
+        - rid: 1384620639482282327
+    - rid: 1384620639482282325
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: InputPort
+        m_PortDataFlowType: 0
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 1384620639482282324
+        m_Connections:
+        - rid: 1384620639482282274
+    - rid: 1384620639482282326
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: OutputPort
+        m_PortDataFlowType: 1
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 1384620639482282324
+        m_Connections: []
+    - rid: 1384620639482282327
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: State
+        Type:
+          m_SerializableType: InfectionGame.Enemies.ECS.EnemyState, InfectionGame.Enemies.ECS,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        LocalValue:
+          rid: 1384620639482282328
+        LinkedVariable:
+          rid: -2
+    - rid: 1384620639482282328
+      type: {class: 'BlackboardVariable`1[[InfectionGame.Enemies.ECS.EnemyState, InfectionGame.Enemies.ECS]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 2
+    - rid: 1384620640487866368
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: RestartAfterSeconds
+        Type:
+          m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        LocalValue:
+          rid: 1384620640487866369
+        LinkedVariable:
+          rid: -2
+    - rid: 1384620640487866369
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 10
+    - rid: 1384620640727990340
+      type: {class: CompositeNodeModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        Position: {x: 177.19762, y: 228.50813}
+        ID:
+          m_Value0: 5642248402488948531
+          m_Value1: 5038257943381567761
+        Parents: []
+        PortModels:
+        - rid: 1384620640727990341
+        - rid: 1384620640727990342
+        NodeType:
+          m_SerializableType: Unity.Behavior.SequenceComposite, Unity.Behavior, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        NodeTypeID:
+          m_Value0: 10181448252506100447
+          m_Value1: 8737116843063128493
+        m_FieldValues: []
+    - rid: 1384620640727990341
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: InputPort
+        m_PortDataFlowType: 0
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 1384620640727990340
+        m_Connections:
+        - rid: 1384620639482282062
+    - rid: 1384620640727990342
+      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        m_Name: OutputPort
+        m_PortDataFlowType: 1
+        m_IsFloating: 0
+        m_NodeModel:
+          rid: 1384620640727990340
+        m_Connections:
+        - rid: 1384620639482282099
+        - rid: 1384620639482282079
+--- !u!114 &5395720699162235475
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dd922ae02c94c87a66e46a10a7319b9, type: 3}
+  m_Name: BasicEnemyBehaviorGraph Blackboard
+  m_EditorClassIdentifier: Unity.Behavior.Authoring::Unity.Behavior.BehaviorBlackboardAuthoringAsset
+  AssetID:
+    m_Value0: 8359391149213146247
+    m_Value1: 9059646311671767659
+  m_Variables:
+  - rid: 1384620639482282059
+  m_VersionTimestamp: 639295815348504544
+  m_CommandBuffer:
+    m_Commands: []
+  m_RuntimeBlackboardAsset: {fileID: -4460131591462010040}
+  references:
+    version: 2
+    RefIds:
+    - rid: 1384620639482282059
+      type: {class: 'TypedVariableModel`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
+      data:
+        ID:
+          m_Value0: 1
+          m_Value1: 0
+        Name: Self
+        IsExposed: 1
+        m_IsShared: 0
+        m_Value: {fileID: 0}

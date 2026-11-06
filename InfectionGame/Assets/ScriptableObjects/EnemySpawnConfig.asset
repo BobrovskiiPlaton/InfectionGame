@@ -12,5 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec23719d62e1d214bb5581c5d494a924, type: 3}
   m_Name: EnemySpawnConfig
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawnConfigSO
-  enemyCount: 100
+  maxEnemyCount: 0
   spawnRadius: 20
+  spawnHeight: 1
+  initialSpawnInterval: 10
+  minimumSpawnInterval: 0.5
+  intervalDecrease: 0.25
