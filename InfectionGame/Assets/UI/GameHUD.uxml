@@ -1,0 +1,13 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/GameHUD.uss?fileID=7433441132597879392&amp;guid=3e1da65870cae194b99bd0d09711c3a2&amp;type=3#GameHUD"/>
+    <ui:VisualElement name="HUDRoot" style="flex-grow: 1; width: 100%; height: 100%; justify-content: space-between; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
+        <ui:Label text="Заражено: 0" name="InfectedCounter" style="font-size: 22px; color: rgb(255, 100, 100);"/>
+        <ui:VisualElement name="BottomPanel" style="flex-grow: 0; width: 100%; padding-top: 15px; padding-right: 15px; padding-bottom: 15px; padding-left: 15px; flex-direction: row; flex-shrink: 0; background-color: rgba(32, 43, 60, 0.85); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px;">
+            <ui:ProgressBar value="100" title="Здоровье" name="HealthBar" style="width: 45%; height: 24px;"/>
+            <ui:VisualElement name="Healthpack" style="flex-grow: 1; margin-left: 15px;">
+                <ui:Label text="Аптечка" name="HealthpackLabel" style="color: rgb(255, 255, 255);"/>
+                <ui:ProgressBar value="100" title="Готова" name="HealthpackCooldown" style="height: 24px;"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
