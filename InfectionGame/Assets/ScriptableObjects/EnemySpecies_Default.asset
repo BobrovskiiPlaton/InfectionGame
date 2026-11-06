@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22e484c86551fff4da9fdb597f81bbf7, type: 3}
+  m_Name: EnemySpecies_Default
+  m_EditorClassIdentifier: 
+  visionRange: 20
+  fieldOfViewDegrees: 120
+  eyeOffsetLocal: {x: 0, y: 1.6, z: 0}
+  hearingRadius: 4
+  moveSpeed: 4
+  passiveMoveSpeed: 1
+  attackDistance: 2
+  attackInterval: 1.5
+  attackDamage: 10
+  memoryDuration: 3
+  behaviorGraph: {fileID: -376817774139861446, guid: 87dc64d3f58502746ba2df055254ba7d, type: 2}

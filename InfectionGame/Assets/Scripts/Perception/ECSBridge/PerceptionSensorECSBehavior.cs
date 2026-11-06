@@ -17,6 +17,8 @@ namespace InfectionGame.Perception
 
         [SerializeField] private Vector3 eyeOffsetLocal = new Vector3(0f, 1.6f, 0f);
 
+        [SerializeField, Min(0f)] private float hearingRadius = 0f;
+
         sealed class Baker : Baker<PerceptionSensorECSBehavior>
         {
             public override void Bake(PerceptionSensorECSBehavior authoring)
@@ -37,6 +39,11 @@ namespace InfectionGame.Perception
                 });
 
                 SetComponentEnabled<VisionSensor>(entity, authoring.visionEnabled);
+
+                AddComponent(entity, new HearingSensor
+                {
+                    Radius = authoring.hearingRadius,
+                });
 
                 AddBuffer<DetectedTarget>(entity);
                 AddComponent(entity, new DetectionState());

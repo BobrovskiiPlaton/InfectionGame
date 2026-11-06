@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2393720805148216653}
   - component: {fileID: 2642865243026092434}
   - component: {fileID: 9200947652493068218}
+  - component: {fileID: 9200947652493068219}
   m_Layer: 0
   m_Name: NPC
   m_TagString: Untagged
@@ -179,3 +180,17 @@ MonoBehaviour:
   damagedColor: {r: 0, g: 1, b: 0, a: 1}
   infectedColor: {r: 1, g: 0, b: 0.028217316, a: 1}
   enemySpawnRequest: {fileID: 11400000, guid: 67c3b618c37921849bbba69bdffe6cb7, type: 2}
+--- !u!114 &9200947652493068219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 622784789094160124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eaa6b3846e97422b991321a8ead18c3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: InfectionGame.Perception::InfectionGame.Perception.PerceptionDebugTarget
+  faction: 2
+  detectable: 1

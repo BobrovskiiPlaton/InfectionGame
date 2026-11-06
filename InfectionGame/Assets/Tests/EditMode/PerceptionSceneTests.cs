@@ -37,17 +37,17 @@ namespace InfectionGame.Perception.Tests
             Assert.IsTrue(scene.isLoaded, "SubScene-сцена не открылась");
 
             int sensors = 0;
-            int targets = 0;
+            int enemies = 0;
             foreach (var root in scene.GetRootGameObjects())
             {
                 sensors += root.GetComponentsInChildren<PerceptionSensorECSBehavior>(true).Length;
-                targets += root.GetComponentsInChildren<PerceptionTargetECSBehavior>(true).Length;
+                enemies += root.GetComponentsInChildren<InfectionGame.Enemies.ECS.EnemyAuthoring>(true).Length;
             }
 
             Assert.That(sensors, Is.GreaterThanOrEqualTo(1),
                 "в SubScene нет PerceptionSensorECSBehavior — сенсоры не забэйкаются");
-            Assert.That(targets, Is.GreaterThanOrEqualTo(1),
-                "в SubScene нет PerceptionTargetECSBehavior — целей для обнаружения нет");
+            Assert.That(enemies, Is.GreaterThanOrEqualTo(1),
+                "в SubScene нет EnemyAuthoring — нового врага на ECS не будет");
         }
 
         [Test]
@@ -72,22 +72,22 @@ namespace InfectionGame.Perception.Tests
         }
 
         [Test]
-        public void PerceptionPlayground_HasAtLeastOneSensorAndOneTarget()
+        public void PerceptionPlayground_DebugProbesAreInactive()
         {
             var scene = EditorSceneManager.OpenScene(kSubScenePath, OpenSceneMode.Single);
 
-            int sensors = 0;
-            int targets = 0;
+            // Сцена держит ровно одного нового врага и одного NPC. Старые vision-пробники
+            // остаются в файле как заготовки, но выключены — иначе это лишние агенты,
+            // которые бэйкатся в сущности и мешают тестировать реальную перцепцию.
             foreach (var root in scene.GetRootGameObjects())
             {
-                sensors += root.GetComponentsInChildren<PerceptionSensorECSBehavior>(true).Length;
-                targets += root.GetComponentsInChildren<PerceptionTargetECSBehavior>(true).Length;
+                foreach (var probe in root.GetComponentsInChildren<PerceptionSensorECSBehavior>(true))
+                {
+                    if (probe.name.Contains("DISABLED"))
+                        Assert.That(probe.gameObject.activeSelf, Is.False,
+                            $"{probe.name}: пробник должен быть выключен");
+                }
             }
-
-            Assert.That(sensors, Is.GreaterThanOrEqualTo(1),
-                "в SubScene должен быть минимум один сенсор");
-            Assert.That(targets, Is.GreaterThanOrEqualTo(1),
-                "в SubScene должна быть минимум одна цель");
         }
 
         [Test]

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5aa26952225964449ca58401d64a38b, type: 3}
   m_Name: NPCSpawnConfig
   m_EditorClassIdentifier: Assembly-CSharp::NPCSpawnConfigSO
-  npcCount: 100
+  npcCount: 1
   spawnRadius: 30
