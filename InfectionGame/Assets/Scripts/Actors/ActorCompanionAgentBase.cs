@@ -6,19 +6,6 @@ using UnityEngine;
 
 namespace InfectionGame.Actors
 {
-    /// <summary>
-    /// База companion-моста любого актора. Unity Behavior работает только с GameObject,
-    /// поэтому поведение живёт в GameObject, а данные (перцепция, точка брожения) — в ECS.
-    /// Этот класс делает всю общую работу: находит свою ECS-сущность, зеркалит её
-    /// трансформ и читает/пишет <see cref="WanderTarget"/>.
-    ///
-    /// Наследник описывает только запрос поиска своей сущности и переключение состояния —
-    /// enum состояния у каждого актора свой и виден графу.
-    ///
-    /// Сущность ищется по ближайшей позиции — для одного актора это однозначно. Если акторов
-    /// станет много и они будут рождаться вплотную, стоит заменить на явную связку через
-    /// <c>UnityObjectRef&lt;GameObject&gt;</c>.
-    /// </summary>
     public abstract class ActorCompanionAgentBase : MonoBehaviour, IActorCompanionAgent
     {
         [Tooltip("Максимальная дистанция поиска своей ECS-сущности, метры.")]
@@ -29,13 +16,10 @@ namespace InfectionGame.Actors
         private Entity _entity;
         private bool _linked;
 
-        /// <summary>Мир ECS, к которому привязан актор.</summary>
         protected Unity.Entities.World EcsWorld => _world;
 
-        /// <summary>Сущность актора в ECS. Entity.Null, если ещё не привязались.</summary>
         public Entity Entity => _linked ? _entity : Entity.Null;
 
-        /// <inheritdoc />
         public bool IsLinked =>
             _linked && _world is { IsCreated: true } && _world.EntityManager.Exists(_entity);
 
@@ -66,10 +50,8 @@ namespace InfectionGame.Actors
             transform.SetPositionAndRotation(localTransform.Position, localTransform.Rotation);
         }
 
-        /// <summary>Запрос, по которому ищется своя ECS-сущность.</summary>
         protected abstract EntityQuery CreateLinkQuery(EntityManager entityManager);
 
-        /// <inheritdoc />
         public bool TryGetPerception(out InfectionGame.Perception.DetectionState state)
         {
             state = default;
@@ -81,7 +63,6 @@ namespace InfectionGame.Actors
             return true;
         }
 
-        /// <inheritdoc />
         public bool TryGetWanderTarget(out WanderTarget wander)
         {
             wander = default;
@@ -93,7 +74,6 @@ namespace InfectionGame.Actors
             return true;
         }
 
-        /// <inheritdoc />
         public void SetWanderTarget(float3 position)
         {
             if (!IsLinked)
@@ -102,7 +82,6 @@ namespace InfectionGame.Actors
             _world.EntityManager.SetComponentData(_entity, WanderTargetMath.Create(position));
         }
 
-        /// <inheritdoc />
         public void ClearWanderTarget()
         {
             if (!IsLinked)
@@ -111,6 +90,7 @@ namespace InfectionGame.Actors
             _world.EntityManager.SetComponentData(_entity, WanderTargetMath.Cleared());
         }
 
+        // Костыль, ищет ближайшую entity, чтобы привязаться к ней
         private void TryLink()
         {
             if (_world == null || !_world.IsCreated)

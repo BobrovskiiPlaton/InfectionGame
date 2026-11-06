@@ -5,36 +5,21 @@ using UnityEngine;
 
 namespace InfectionGame.Perception
 {
-    /// <summary>
-    /// Тестовый визир перцепции: создаёт ECS-сущность с <see cref="DetectionSensor"/> и
-    /// <see cref="VisionSensor"/>, каждый кадр синхронизирует в неё трансформ этого
-    /// GameObject и рисует конус зрения вместе с результатом детекции. Работает и в
-    /// Scene view, и в Game view (там нужно включить Gizmos). Нужен только для ручного
-    /// теста — в боевом коде сенсор создаётся Baker'ом через SubScene.
-    /// </summary>
     [DisallowMultipleComponent]
     public class PerceptionDebugProbe : MonoBehaviour
     {
-        [Header("Vision")]
-        [Tooltip("Максимальная дальность видимости в метрах.")]
         [SerializeField, Min(0f)] private float range = 20f;
 
-        [Tooltip("Полный угол конуса вокруг оси взгляда, в градусах. 360 — круговой обзор.")]
         [SerializeField, Range(0f, 360f)] private float fieldOfViewDegrees = 120f;
 
-        [Tooltip("Позиция глаз в локальных координатах.")]
         [SerializeField] private Vector3 eyeOffsetLocal = new Vector3(0f, 1.6f, 0f);
 
-        [Tooltip("Кого сенсор считает интересным.")]
         [SerializeField] private TargetFaction targets = TargetFaction.Player;
 
-        [Tooltip("Сколько секунд цель помнится после потери из виду. 0 — забывать сразу.")]
         [SerializeField, Min(0f)] private float memoryDuration = 0.5f;
 
-        [Tooltip("Выключите, чтобы временно ослепить сенсор, не убирая его из сцены.")]
         [SerializeField] private bool visionEnabled = true;
 
-        [Header("Debug drawing")]
         [SerializeField] private bool drawCone = true;
         [SerializeField, Range(3, 64)] private int coneSegments = 24;
         [SerializeField] private Color coneColor = new Color(0f, 1f, 1f, 0.35f);
@@ -63,7 +48,6 @@ namespace InfectionGame.Perception
                 _created = true;
             }
 
-            // Параметры пишем каждый кадр, чтобы правки в инспекторе действовали на лету.
             Vector3 p = transform.position;
             Quaternion r = transform.rotation;
             em.SetComponentData(_entity,
@@ -98,7 +82,6 @@ namespace InfectionGame.Perception
             DrawDetection();
         }
 
-        /// <summary>Точка глаза в мировых координатах.</summary>
         Vector3 EyeWorld => transform.TransformPoint(eyeOffsetLocal);
 
         void DrawCone()

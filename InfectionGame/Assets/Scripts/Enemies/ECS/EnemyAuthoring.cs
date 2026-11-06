@@ -44,7 +44,6 @@ namespace InfectionGame.Enemies.ECS
                 SetComponentEnabled<EnemyStateChase>(entity, false);
                 SetComponentEnabled<EnemyStateAttack>(entity, false);
 
-                // Враг — ещё и цель для перцепции: без этого NPC его физически не заметит.
                 AddComponent(entity, new InfectionGame.Perception.DetectionTarget
                 {
                     Faction = InfectionGame.Perception.TargetFaction.Enemy,

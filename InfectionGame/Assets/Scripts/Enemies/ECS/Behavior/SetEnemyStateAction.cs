@@ -6,10 +6,6 @@ using UnityEngine;
 
 namespace InfectionGame.Enemies.Behavior
 {
-    /// <summary>
-    /// Переключает состояние врага. ECS-система движения/атаки берёт это состояние и
-    /// исполняет: Chase — идти к цели, Attack — стоять и бить, Idle — бродить.
-    /// </summary>
     [Serializable, GeneratePropertyBag]
     [NodeDescription(
         name: "Set Enemy State",
@@ -19,10 +15,6 @@ namespace InfectionGame.Enemies.Behavior
         id: "a1b2c3d4e5f60718293a4b5c6d7e8f90")]
     public partial class SetEnemyStateAction : Unity.Behavior.Action
     {
-        // Обязательно BlackboardVariable<T> + [SerializeReference]: NodeRegistry.GetNodeVariables
-        // показывает в инспекторе узла только поля, чей тип наследуется от BlackboardVariable.
-        // Обычное поле здесь просто не отрисуется.
-        [Tooltip("Состояние, в которое переключить врага.")]
         [SerializeReference] public BlackboardVariable<EnemyState> State;
 
         protected override Status OnUpdate()

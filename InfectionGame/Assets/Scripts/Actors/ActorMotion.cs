@@ -3,9 +3,6 @@ using Unity.Transforms;
 
 namespace InfectionGame.Actors
 {
-    /// <summary>
-    /// Кинематика актора. Вынесена отдельно, чтобы job'ы движения не дублировали шаг и поворот.
-    /// </summary>
     public static class ActorMotion
     {
         public static void MoveTowards(
