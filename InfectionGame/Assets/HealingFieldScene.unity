@@ -2436,6 +2436,7 @@ GameObject:
   - component: {fileID: 1626412093}
   - component: {fileID: 1626412092}
   - component: {fileID: 1626412094}
+  - component: {fileID: 551000021}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -3420,6 +3421,185 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9aff49d5ce75bf543b7e2b85926019a6, type: 3}
+--- !u!1 &551000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 551000002}
+  - component: {fileID: 551000003}
+  m_Layer: 0
+  m_Name: DISABLED Vision Probe (Narrow)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &551000002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 551000001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: -0.7071068}
+  m_LocalPosition: {x: 12, y: 1.6, z: 0.35}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 270, z: 0}
+--- !u!114 &551000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 551000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c59a8fe408147ed97bce77ba5f11e51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  range: 15
+  fieldOfViewDegrees: 90
+  eyeOffsetLocal: {x: 0, y: 1.6, z: 0}
+  targets: 1
+  memoryDuration: 0.5
+  visionEnabled: 1
+  drawCone: 1
+  coneSegments: 24
+  coneColor: {r: 0, g: 1, b: 1, a: 0.35}
+  seenColor: {r: 1, g: 0, b: 0, a: 1}
+  rememberedColor: {r: 1, g: 1, b: 0, a: 1}
+  hiddenColor: {r: 1, g: 1, b: 1, a: 0.25}
+--- !u!1 &551000011
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 551000012}
+  - component: {fileID: 551000013}
+  m_Layer: 0
+  m_Name: DISABLED Vision Probe (Wide)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &551000012
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 551000011}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 5, y: 1.6, z: 10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &551000013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 551000011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c59a8fe408147ed97bce77ba5f11e51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  range: 25
+  fieldOfViewDegrees: 180
+  eyeOffsetLocal: {x: 0, y: 1.6, z: 0}
+  targets: 1
+  memoryDuration: 0.5
+  visionEnabled: 1
+  drawCone: 1
+  coneSegments: 24
+  coneColor: {r: 0, g: 1, b: 1, a: 0.35}
+  seenColor: {r: 1, g: 0, b: 0, a: 1}
+  rememberedColor: {r: 1, g: 1, b: 0, a: 1}
+  hiddenColor: {r: 1, g: 1, b: 1, a: 0.25}
+--- !u!114 &551000021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1626412087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eaa6b3846e97422b991321a8ead18c3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  faction: 1
+  detectable: 1
+--- !u!1 &771000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 771000002}
+  - component: {fileID: 771000003}
+  m_Layer: 0
+  m_Name: Perception (ECS SubScene)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &771000002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 771000001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &771000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 771000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45a335734b1572644a6a5d09d87adc65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _SceneAsset: {fileID: 102900000, guid: 7c3548a2f05748b4a9423289eee07913, type: 3}
+  _HierarchyColor: {r: 0.55, g: 0.75, b: 0.95, a: 1}
+  AutoLoadScene: 1
+  _SceneGUID:
+    Value:
+      x: 0
+      y: 0
+      z: 0
+      w: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -3435,3 +3615,6 @@ SceneRoots:
   - {fileID: 1797882168}
   - {fileID: 1024084154182398372}
   - {fileID: 7569564162620867922}
+  - {fileID: 551000002}
+  - {fileID: 551000012}
+  - {fileID: 771000002}
