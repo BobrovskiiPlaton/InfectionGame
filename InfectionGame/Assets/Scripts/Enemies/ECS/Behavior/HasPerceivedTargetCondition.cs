@@ -1,5 +1,5 @@
 using System;
-using InfectionGame.Enemies.ECS;
+using InfectionGame.Actors;
 using Unity.Behavior;
 using Unity.Properties;
 using UnityEngine;
@@ -7,7 +7,9 @@ using UnityEngine;
 namespace InfectionGame.Enemies.Behavior
 {
     /// <summary>
-    /// Условие: враг сейчас воспринимает цель (зрение, слух или память о ней).
+    /// Условие: актор сейчас воспринимает цель (зрение, слух или память о ней).
+    /// Работает с <see cref="IActorCompanionAgent"/>, а не с конкретным мостом — поэтому
+    /// узел одинаково служит и врагу, и NPC, и не требует копирования.
     /// Читает <c>DetectionState</c> из ECS через companion-мост.
     /// </summary>
     // Условия регистрируются ТОЛЬКО через [Condition(...)]: ConditionUtility.GetConditionTypes
@@ -30,7 +32,9 @@ namespace InfectionGame.Enemies.Behavior
             if (GameObject == null)
                 return false;
 
-            if (!GameObject.TryGetComponent<EnemyCompanionAgent>(out var agent))
+            IActorCompanionAgent agent = GameObject.GetComponent<IActorCompanionAgent>();
+
+            if (agent == null)
                 return false;
 
             if (!agent.TryGetPerception(out var perception))

@@ -1,64 +1,50 @@
 # NPC: убегает от врага и бродит
 
-Инструкция для агента, который будет переносить архитектуру врага на NPC. Читай
-последовательно, шаги зависимы. Всё, что уже сделано для врага — в
-`Assets/Docs/enemy-behavior-tree.md`, здесь только дельта.
+Инструкция для агента, который переносит поведение врага на NPC. Переделка уже
+подготовлена: всё общее вынесено в `InfectionGame.Actors`, поэтому писать надо заметно
+меньше, чем копировать. Читай последовательно, шаги зависимы.
 
-## 0. Паттерн, который копируем
+## 0. Что уже готово и переиспользуется как есть
 
-У врага работает схема «ECS-сущность + companion GameObject»:
+Слой `Assets/Scripts/Actors/` (сборка `InfectionGame.Actors`) существует ровно для того,
+чтобы NPC не копировал врага:
 
-```
-SubScene + Baker  →  ECS-сущность (данные + системы)
-                         ↑ мост
-                  companion GameObject с BehaviorGraphAgent
-                  (Unity Behavior умеет работать только с GameObject)
-```
+| Готово | Для чего NPC |
+|---|---|
+| `IActorCompanionAgent` | контракт моста GameObject ↔ ECS |
+| `ActorCompanionAgentBase` | поиск своей сущности, зеркало трансформа, точка брожения |
+| `ActorMotion` | шаг к цели и поворот |
+| `WanderTarget` | компонент точки брожения |
+| `WanderTargetMath` | политика «не перебирать точку каждый тик» + прибытие + сброс |
+| `ActorSpeciesSO` | зрение / слух / движение / память / behavior graph |
+| `CompanionSpawnSystemBase` | спавн companion GameObject с `BehaviorGraphAgent` |
+| `HasPerceivedTargetCondition` | узел-условие, работает через интерфейс моста |
+| `IsTargetInRangeCondition` | то же (NPC не нужен, но и не мешает) |
+| `ChooseWanderTargetAction` | узел брожения, работает через интерфейс моста |
 
-Разделение обязанностей строгое и его надо сохранить:
+Эти узлы уже лежат в графе врага и **их не нужно переписывать под NPC** — они берут
+`IActorCompanionAgent`, а не конкретный класс. То есть граф NPC соберёшь из тех же узлов.
 
-* **граф** — единственный, кто переключает состояние. Никакой ECS-системе нельзя
-  писать состояние.
-* **ECS-система** — только исполняет: двигает, крутит, считает кулдауны.
+Враг уже является целью перцепции: `EnemyAuthoring.Bake` добавляет
+`DetectionTarget { Faction = TargetFaction.Enemy }`. Проверь, что это на месте, — без
+него NPC физически не заметит врага ни зрением, ни слухом.
 
-Если завести второй источник переходов, они начнут перетирать решения друг друга.
+## 1. Что надо написать (минимум)
 
-## 1. Сначала сделай врага видимым
-
-Сейчас `EnemyAuthoring` НЕ добавляет `DetectionTarget` — враг физически не является
-целью для перцепции, NPC его не заметит ни зрением, ни слухом. Без этого шага ничего
-работать не будет.
-
-В `EnemyAuthoring.Bake` добавить:
-
-```csharp
-AddComponent(entity, new DetectionTarget { Faction = TargetFaction.Enemy });
-```
-
-## 2. Файлы
-
-Под `Assets/Scripts/NPCs/ECS/` (свой подкаталог + свой asmdef, чтобы не тащить в новую
-сборку легаси-скрипты из `Assembly-CSharp`):
+Под `Assets/Scripts/NPCs/ECS/` со своим asmdef (`InfectionGame.NPCs.ECS`, refs: те же, что
+у `InfectionGame.Enemies.ECS`, плюс `InfectionGame.Actors`):
 
 ```
-InfectionGame.NPCs.ECS.asmdef     refs: Unity.Entities, Unity.Entities.Hybrid,
-                                       Unity.Transforms, Unity.Mathematics,
-                                       Unity.Collections, Unity.Burst, Unity.Behavior,
-                                       InfectionGame.Perception
-NpcComponents.cs                  теги, вид, состояния
-Species/NpcSpeciesSO.cs           ScriptableObject вида
-NpcAuthoring.cs                   Baker
-NpcAgentSystem.cs                 исполнитель (2 job'а)
-NpcCompanionAgent.cs              мост GameObject ↔ ECS
-NpcCompanionSpawnSystem.cs        спавн companion'а
-Behavior/HasPerceivedThreatCondition.cs
-Behavior/SetNpcStateAction.cs
-Behavior/ChooseWanderTargetAction.cs
+NpcComponents.cs          теги, вид, состояния, NpcAgent
+Species/NpcSpeciesSO.cs   : ActorSpeciesSO  + fleeDistance
+NpcAuthoring.cs           Baker
+NpcAgentSystem.cs         2 job'а
+NpcCompanionAgent.cs      : ActorCompanionAgentBase  (маленький)
+NpcCompanionSpawnSystem.cs: CompanionSpawnSystemBase  (маленький)
+Behavior/SetNpcStateAction.cs   единственный новый узел
 ```
 
-## 3. Компоненты (`NpcComponents.cs`)
-
-Зеркало `EnemyComponents.cs`, минус атака:
+### `NpcComponents.cs`
 
 ```csharp
 public struct NpcTag : IComponentData { }
@@ -66,18 +52,15 @@ public struct NpcCompanionSpawned : IComponentData { }
 
 public struct NpcSpecies : IComponentData
 {
-    public float MoveSpeed;          // скорость в панике (убегание)
-    public float PassiveMoveSpeed;   // скорость брожения
-    public float FleeDistance;       // насколько далеко уносить ноги за один шаг
+    public float MoveSpeed;        // в панике
+    public float PassiveMoveSpeed; // брожение
+    public float FleeDistance;     // насколько далеко уносить ноги за шаг
     public Unity.Entities.UnityObjectRef<Unity.Behavior.BehaviorGraph> BehaviorGraph;
 }
 
 [BlackboardEnum]
 public enum NpcState : byte { Idle = 0, Flee = 1 }
 
-// Состояние — это enableable-теги, а не enum-поле. Переключение через
-// SetComponentEnabled не меняет архетип, а диспетчеризация job'а вместо switch
-// делает переходы физически невозможными из кода.
 public struct NpcStateIdle : IComponentData, IEnableableComponent { }
 public struct NpcStateFlee : IComponentData, IEnableableComponent { }
 
@@ -85,177 +68,172 @@ public struct NpcAgent : IComponentData
 {
     public Entity Threat;
 }
-
-// Точка брожения. TimeSinceAssigned обязателен: без него узел, который подбирает
-// точку, будет брать новую каждый тик — враг у вас уже дёргался именно из-за этого.
-public struct NpcWanderTarget : IComponentData
-{
-    public float3 Position;
-    public float HasTarget;
-    public float TimeSinceAssigned;
-}
 ```
 
-## 4. Исполнитель (`NpcAgentSystem.cs`)
+`WanderTarget` брать из `InfectionGame.Actors` — своей точки брожения NPC не нужен.
 
-Три вещи, которые не повторяйте из старого кода врага: никакого `switch`, никакой
-записи состояния, никаких `SetComponentEnabled` по своей инициативе. Три структуры
-с `[WithAll]` вместо этого:
+### `NpcAgentSystem.cs`
+
+Три правила, которые уже проверены на враге: никакого `switch`, никакой записи состояния,
+никаких `SetComponentEnabled` по своей инициативе. Вместо switch — `[WithAll]` на job:
 
 ```csharp
-[BurstCompile]
-[UpdateInGroup(typeof(SimulationSystemGroup))]
-[UpdateAfter(typeof(VisionDetectionSystem))]
-public partial struct NpcAgentSystem : ISystem { ... }
-
-// убегать: цель не храним, направление пересчитывается каждый тик — угроза движется,
-// поэтому заранее выбранная точка бегства всё равно была бы неверной.
+// Убегать. Цель не храним: угроза движется, поэтому заранее выбранная точка бегства
+// всё равно была бы неверной. Направление пересчитывается каждый тик.
 [BurstCompile]
 [WithAll(typeof(NpcStateFlee))]
 public partial struct FleeJob : IJobEntity
 {
+    public float DeltaTime;
+
     void Execute(ref LocalTransform t, in NpcSpecies s, in DetectionState p)
     {
-        if (p.Primary == Entity.Null) return;
+        if (p.Primary == Entity.Null)
+            return;
+
         float3 away = t.Position - p.LastKnownPosition;
-        if (math.lengthsq(away) < 1e-6f) return;
+        if (math.lengthsq(away) < 1e-6f)
+            return;
+
         t.Position += math.normalize(away) * s.MoveSpeed * DeltaTime;
-        // поворот — по EnemyMotion.FaceTowards, только цель позади
+        t.Rotation = ActorMotion.FaceTowards(t.Position, p.LastKnownPosition, t.Rotation);
     }
 }
 
-// бродить: точку дал граф, дойдя — сбросить, чтобы граф выдал новую
+// Бродить: точку дал граф, дойдя — сбросить, чтобы граф выдал новую.
 [BurstCompile]
 [WithAll(typeof(NpcStateIdle))]
-public partial struct NpcWanderJob : IJobEntity { ... }
+public partial struct NpcWanderJob : IJobEntity
+{
+    public float DeltaTime;
+
+    void Execute(ref LocalTransform t, in NpcSpecies s, ref WanderTarget w)
+    {
+        WanderTargetMath.Tick(ref w, DeltaTime);
+        if (w.HasTarget <= 0.5f) return;
+
+        ActorMotion.MoveTowards(ref t, w.Position, s.PassiveMoveSpeed, DeltaTime);
+        if (WanderTargetMath.HasArrived(t.Position, w))
+            w = WanderTargetMath.Cleared();
+    }
+}
 ```
 
-Общую кинематику (`MoveTowards`, `FaceTowards`) не дублируйте — вынеси в
-`EnemyMotion` (сейчас `internal static` в `EnemyAgentSystem.cs`) и открой `public`.
+Оба job'а — буквально переиспользование `ActorMotion` + `WanderTargetMath`. `OnUpdate`
+как у `EnemyAgentSystem`: `state.Dependency = job.ScheduleParallel(state.Dependency)` по
+цепочке. Систему объявляй `[UpdateAfter(typeof(VisionDetectionSystem))]`.
 
-## 5. Мост и спавн
+### `NpcCompanionAgent` и `NpcCompanionSpawnSystem`
 
-`NpcCompanionAgent` = копия `EnemyCompanionAgent` с заменой типов. Контракт оставь тем
-же: `TryGetPerception`, `SetState`, `TryGetState`, `SetWanderTarget`,
-`ClearWanderTarget`, `TryGetWanderTarget`, плюс `LateUpdate` зеркалит `LocalTransform`
-в GameObject.
+Копия враговского в миниатюре — вся общая работа уже в базах:
 
-`NpcCompanionSpawnSystem` = копия `EnemyCompanionSpawnSystem`: `GameObject.CreatePrimitive`
-с `BehaviorGraphAgent` (`Graph = species.BehaviorGraph.Value`) + `NpcCompanionAgent`,
-колайдер снимается, сущность помечается `NpcCompanionSpawned`.
+```csharp
+public class NpcCompanionAgent : ActorCompanionAgentBase
+{
+    protected override EntityQuery CreateLinkQuery(EntityManager entityManager) =>
+        entityManager.CreateEntityQuery(
+            ComponentType.ReadOnly<NpcTag>(),
+            ComponentType.ReadOnly<LocalTransform>());
 
-`NpcAuthoring.Bake` добавляет: `NpcTag`, `NpcSpecies`, перцепцию (`DetectionSensor`
-с `Targets = TargetFaction.Enemy`, `VisionSensor`, `HearingSensor`, `DetectedTarget`,
-`DetectionState`), `NpcAgent`, `NpcWanderTarget`, оба тега состояния с
-`SetComponentEnabled<NpcStateFlee>(entity, false)`.
+    public void SetState(NpcState value) { ... SetComponentEnabled<NpcStateIdle/Flee> ... }
+    public bool TryGetState(out NpcState state) { ... }
+}
 
-## 6. Вид (`NpcSpeciesSO`)
+public partial class NpcCompanionSpawnSystem : CompanionSpawnSystemBase
+{
+    protected override EntityQuery CreatePendingQuery() =>
+        GetEntityQuery(ComponentType.ReadOnly<NpcTag>(),
+                       ComponentType.ReadOnly<NpcSpecies>(),
+                       ComponentType.ReadOnly<LocalTransform>());
+    // + HasSpawnedMarker / MarkSpawned / GetBehaviorGraph / AttachBridge / CompanionName
+}
+```
 
-`[CreateAssetMenu(menuName = "InfectionGame/NPC Species")]`, поля как у
-`EnemySpeciesSO`, но без `attackDistance/attackInterval/attackDamage` и с
-`fleeDistance` вместо них. Поле `behaviorGraph` — обычное
-`Unity.Behavior.BehaviorGraph`; в ECS оно попадает через
-`UnityObjectRef<BehaviorGraph>` (важно: `Unity.Entities.Serialization` здесь не нужен,
-в 1.4.8 тип живёт в `Unity.Entities`).
+Грабли, в которые уже упирались: `SystemBase`-наследник обязан быть `partial`
+(`error EA0007`), запрос создаётся через `GetEntityQuery`, а не `CreateEntityQuery`, и
+`Unity.Transforms` нужен в using для `LocalTransform`.
 
-Ассет вида: `Assets/ScriptableObjects/NpcSpecies_Default.asset`. Зрение шире, чем у
-врага (NPC паникует от любого шороха): FOV 360 или 240, `visionRange` 25,
-`hearingRadius` 10, `moveSpeed` 5 (быстрее врага, иначе его догонят), `passiveMoveSpeed`
-1, `fleeDistance` 3, `memoryDuration` 2.
+### `SetNpcStateAction`
 
-## 7. Behavior-узлы
+Единственный новый узел — потому что enum состояния актора свой и граф должен видеть его
+конкретным типом. Узел тонкий, вся логика — в мосте. Правила те же, что и у враговских
+узлов:
 
-Всё то же, что мы нащупали на враге — нарушение любого пункта даёт узел, который не
-появляется в редакторе или молча не работает:
+* `[NodeDescription(name, description, story, category, id)]` с **новым** уникальным `id`.
+* Параметр — `[SerializeReference] public BlackboardVariable<NpcState> State;`
+* `NpcState` обязательно с `[BlackboardEnum]`.
+* story-строка обязана содержать `[State]`, иначе поле не появится в инспекторе.
 
-* условия **только** через `[Condition(name, description, story, category, id)]`.
-  `[NodeDescription]` для условия не работает — `ConditionUtility.GetConditionTypes`
-  ищет `TypeCache.GetTypesWithAttribute<ConditionAttribute>()`.
-* у Action/Composite — `[NodeDescription(...)]`.
-* **все** параметры — `[SerializeReference] public BlackboardVariable<T>`. Всё остальное
-  `NodeRegistry.GetNodeVariables` просто не покажет.
-* enum'ы — с `[BlackboardEnum]`, иначе падение IL2CPP-генерации.
-* story-строка: каждый видимый параметр обязан быть упомянут в `[...]`, иначе поле
-  не нарисуется. Пример: `"Choose Wander Target In Radius [Radius] Restart After [RestartAfterSeconds]"`.
-* `id:` в атрибутах должен быть уникальным на каждый узел — не копируй от врага.
+## 2. Вид
 
-`HasPerceivedThreatCondition.IsTrue()` читает `DetectionState` через мост и возвращает
-`perception.Primary != Entity.Null && perception.TimeSinceSensed <= MemoryGraceSeconds.Value`.
+`NpcSpeciesSO : ActorSpeciesSO`, добавляет только `fleeDistance`, `[CreateAssetMenu(menuName:
+"InfectionGame/NPC Species")]`. Ассет — `Assets/ScriptableObjects/NpcSpecies_Default.asset`.
+Разумные стартовые числа: `visionRange` 25, `fieldOfViewDegrees` 360 (NPC паникует от
+любого шороха), `hearingRadius` 10, `moveSpeed` 5 (быстрее врага, иначе догонят),
+`passiveMoveSpeed` 1, `memoryDuration` 2, `fleeDistance` 3.
 
-`ChooseWanderTargetAction` копируется от врага с заменой `EnemyCompanionAgent` →
-`NpcCompanionAgent` и типов состояния/точки. Логику не меняй: новая точка берётся
-только когда `HasTarget == 0` (дошёл) либо когда `TimeSinceAssigned >= RestartAfterSeconds`.
-Узел обязан быть **идемпотентным** — граф стоит под `Repeat` и зовёт его каждый тик.
+Поле `behaviorGraph` обязательно назначь — иначе companion получит `null` и граф не
+запустится вовсе.
 
-Когда появится третий актор, эти узлы стоит обобщить через интерфейс моста, а не
-копировать в третий раз.
+## 3. Граф — только руками в редакторе
 
-## 8. Граф — только руками в редакторе
-
-`BehaviorAuthoringGraph` и `GraphAsset` internal, из кода граф не собрать. Собери в
-визуальном редакторе и сохрани, например, в `Assets/BehaviorTrees/NpcBehaviorGraph.asset`.
+`BehaviorAuthoringGraph` и `GraphAsset` internal, из кода граф не собрать.
 
 ```
 On Start (Repeat)
 └── Selector
-    ├── Conditional Guard [Has Perceived Threat 0.5]   Abort: Lower Priority
+    ├── Conditional Guard [Has Perceived Target 0.5]   Abort: Lower Priority
     │   └── Set Npc State = Flee
     └── Sequence
         ├── Set Npc State = Idle
         └── Choose Wander Target [Radius 6] [Restart After 10]
 ```
 
-Это ровно та форма, в которую мы только что переделывали граф врага. Три ошибки,
-которые там были, повторять нельзя — они не видны на глаз, но полностью ломают
-поведение:
+`Has Perceived Target` и `Choose Wander Target` — **те же самые узлы**, что у врага, из
+палитры они берутся один в один.
+
+Три ошибки, которые уже ломали граф врага и которые повторять нельзя — они не видны на
+глаз, но полностью убивают поведение:
 
 1. **Selector + узел, всегда возвращающий Success.** `Choose Wander Target` всегда
-   Success, поэтому если `Set Npc State = Idle` стоит третьим ребёнком Selector — он не
-   выполнится никогда, NPC застрянет в Flee навсегда. Поэтому брожение — это одна
-   `Sequence`, а не два отдельных ребёнка.
-2. **Guard без дочернего узла.** У `Conditional Guard` (`Is Target In Range` у врага)
-   было `m_Child: {rid: -2}` — гард обёрнут вокруг пустоты, а действие стояло сестрой.
-   Перетаскивай действие именно НА гард.
-3. **`Abort: None` — это значение по умолчанию**, и оно отключает прерывание совсем:
-   условие проверяется один раз при входе в ветку и не может из неё вытащить. Ставь
-   `Lower Priority` у гарда над боевой/панической веткой. Для выстрела из брожения
-   «заметил врага — бросил всё» нужен `Abort: Lower Priority`; для «враг потерялся —
-   перестал бежать» понадобится `Self` на ветке бегства.
+   Success, поэтому `Set Npc State = Idle` отдельным третьим ребёнком Selector не
+   выполнится никогда и NPC застрянет в Flee навсегда. Брожение — это одна `Sequence`,
+   а не два отдельных ребёнка, и `Set Idle` идёт первым.
+2. **Guard без дочернего узла.** У `Conditional Guard` (`m_Child: {rid: -2}`) нет действия
+   внутри — гард обёрнут вокруг пустоты. Перетаскивай `Set Npc State` именно НА гард.
+3. **`Abort: None` — значение по умолчанию**, и оно отключает прерывание совсем: условие
+   проверяется один раз при входе в ветку и не может из неё вытащить. Ставь `Lower
+   Priority`; если захочешь, чтобы NPC переставал убегать сразу после потери цели — `Self`
+   на ветке бегства.
 
-После сборки графа открой ассет текстом и проверь: у каждого `ConditionalGuardModifier`
-поле `m_ObserverType` не должно быть `0`, и у каждого `m_Child` должен быть настоящий
-`rid`, не `-2`.
+После сборки открой ассет текстом и проверь: у `ConditionalGuardModifier` поле
+`m_ObserverType` не `0`, и у `m_Child` настоящий `rid`, а не `-2`.
 
-Не забудь назначить `behaviorGraph` в ассете вида — иначе companion получит `null` и
-граф не запустится вовсе.
+## 4. Сцена и префаб
 
-## 9. Сцена и префаб
+* ECS-версию NPC собери в SubScene по образцу `Enemy (ECS)` в `PerceptionPlayground.unity`.
+* Старый `NPC` MonoBehaviour (`Assets/Scripts/NPC.cs`) убери или выключи: его `FixedUpdate`
+  ищет врага через `EnemyRuntimeSet`, там новых ECS-врагов нет, и два источника поведения
+  начнут спорить. `PerceptionDebugTarget` на `Assets/Prefabs/NPC.prefab` — зеркало для
+  GameObject-версии, для ECS-версии не нужно.
+* Спавнеры держи согласованными со сценой: сейчас `NPCSpawnConfig.npcCount = 1` и
+  `EnemySpawnConfig.maxEnemyCount = 0`.
 
-* `NPC.prefab` уже несёт `PerceptionDebugTarget` (faction NPC) — это зеркало для
-  GameObject-версии. Для ECS-версии NPC собери отдельный авторинг-объект в SubScene
-  (по образцу `Enemy (ECS)` в `PerceptionPlayground.unity`).
-* Убери/выключи старый `NPC` MonoBehaviour: его `FixedUpdate` ищет врага через
-  `EnemyRuntimeSet`, новых ECS-врагов там нет, и два источника поведения опять
-  начнут спорить.
-* Спавнеры: `NPCSpawnConfig.npcCount` и `EnemySpawnConfig.maxEnemyCount` держи
-  согласованными со сценой — сейчас там 1 и 0.
-
-## 10. Тесты
+## 5. Тесты
 
 Зеркали `EnemyAgentSystemTests`. Обязательные кейсы:
 
 * `Flee_MovesAwayFromThreat` — удаляется от `LastKnownPosition`.
-* `Flee_TurnsAwayFromThreat` — смотрит в противоположную сторону.
 * `Flee_WithoutThreat_StopsAndKeepsState` — без цели стоит, состояние не трогает.
-* `Idle_WithWanderTarget_MovesThereSlowly` — скорость `passiveMoveSpeed`, не боевая.
-* `Idle_WanderTarget_AccumulatesTimeSinceAssigned` — вот на чём держится защита от
-  дёрганья.
+* `Idle_WithWanderTarget_MovesThereSlowly` — скорость `passiveMoveSpeed`.
 * `Idle_OnArrival_ClearsWanderTargetAndResetsTimer`.
-* `FleeJob_NeverSwitchesStateTags` и `WanderJob_NeverSwitchesStateTags` — состояние
-  система не меняет.
+* `FleeJob_NeverSwitchesStateTags` / `WanderJob_NeverSwitchesStateTags` — состояние система
+  не меняет. Это тот инвариант, который не даёт появиться второму источнику переходов.
+* `NpcCompanionAgent_ImplementsTheSharedBridgeContract` — иначе узлы графа его не найдут.
 
-Прогон: редактор должен быть закрыт, иначе batchmode не стартует
-(`Temp/UnityLockfile`):
+Общая политика брожения уже покрыта `WanderTargetMathTests`, её копировать не нужно.
+
+Прогон (редактор должен быть закрыт, иначе batchmode не стартует — `Temp/UnityLockfile`):
 
 ```
 "D:/apps_for_coding/Unity/Hub/Editor/6000.3.8f1/Editor/Unity.exe" -batchmode \
@@ -265,15 +243,18 @@ On Start (Repeat)
   -logFile <scratch>/unity-tests/editor.log
 ```
 
-БЕЗ `-nographics` — тесты гоняют сцены. Итог парси из `results.xml`
-(`test-run` total/passed/failed), компиляционные ошибки — `error CS` из лога.
+БЕЗ `-nographics` — тесты гоняют сцены. Итог парси из `results.xml` (`test-run`
+total/passed/failed), ошибки компиляции — `error CS` / `error EA` из лога.
 
-## 11. Грабли
+## 6. Грабли
 
-* `write_file` откажется перезаписать файл, который не был прочитан в этом же проходе
-  (`Refusing to overwrite`) — сделай `rm -f` и запиши заново.
-* Условия ищутся только по `[Condition]`, и story обязан содержать `[...]`.
-* Значения по умолчанию в полях узлов (`Radius`, `Distance`, `State`) задаются в графе,
-  не в коде.
-* Состояние — enableable-теги: `AddComponent<T>` включает их сразу, поэтому начальное
-  состояние задавай через `SetComponentEnabled`.
+* Условия регистрируются только через `[Condition(...)]`, Action — через
+  `[NodeDescription(...)]`; story обязана содержать `[...]` для каждого видимого поля.
+* `id:` в атрибутах уникален на каждый узел — не копируй от врага.
+* `AddComponent<T>` включает enableable-тег сразу, поэтому начальное состояние задавай через
+  `SetComponentEnabled`.
+* `write_file` откажется перезаписать файл, который не читал в этом же проходе
+  (`Refusing to overwrite`) — `rm -f` и запиши заново.
+* Состояние не трогать из кода ни при каких условиях: если появится соблазн «подстраховать»
+  граф и переключить состояние из системы, получишь ровно ту ошибку, ради которой врага
+  уже переписывали.

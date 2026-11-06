@@ -1,4 +1,4 @@
-using Unity.Collections;
+using InfectionGame.Actors;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
@@ -6,59 +6,42 @@ using UnityEngine;
 namespace InfectionGame.Enemies.ECS
 {
     /// <summary>
-    /// Спавнит companion GameObject для каждой ECS-сущности врага. Unity Behavior работает
-    /// только с GameObject, поэтому для каждого врага рождается объект с
-    /// <c>BehaviorGraphAgent</c> и <see cref="EnemyCompanionAgent"/> (мост к ECS).
-    /// Сущность помечается <see cref="EnemyCompanionSpawned"/>, чтобы не спавнить дубликаты.
+    /// Спавнит companion GameObject для каждой ECS-сущности врага. Общая механика спавна —
+    /// в <see cref="CompanionSpawnSystemBase"/>; здесь только враговое: запрос, маркер,
+    /// источник behavior graph и мост.
     /// </summary>
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(EnemyAgentSystem))]
-    public partial class EnemyCompanionSpawnSystem : SystemBase
+    public partial class EnemyCompanionSpawnSystem : CompanionSpawnSystemBase
     {
-        private EntityQuery _pendingQuery;
-
-        protected override void OnCreate()
+        protected override EntityQuery CreatePendingQuery()
         {
-            _pendingQuery = GetEntityQuery(
+            return GetEntityQuery(
                 ComponentType.ReadOnly<EnemyTag>(),
                 ComponentType.ReadOnly<EnemySpecies>(),
                 ComponentType.ReadOnly<LocalTransform>());
         }
 
-        protected override void OnUpdate()
+        protected override bool HasSpawnedMarker(Entity entity)
         {
-            using NativeArray<Entity> entities = _pendingQuery.ToEntityArray(Allocator.Temp);
-
-            for (int i = 0; i < entities.Length; i++)
-            {
-                Entity entity = entities[i];
-
-                if (EntityManager.HasComponent<EnemyCompanionSpawned>(entity))
-                    continue;
-
-                SpawnCompanion(entity);
-                EntityManager.AddComponent<EnemyCompanionSpawned>(entity);
-            }
+            return EntityManager.HasComponent<EnemyCompanionSpawned>(entity);
         }
 
-        private void SpawnCompanion(Entity entity)
+        protected override void MarkSpawned(Entity entity)
         {
-            EnemySpecies species = EntityManager.GetComponentData<EnemySpecies>(entity);
-            LocalTransform localTransform = EntityManager.GetComponentData<LocalTransform>(entity);
-
-            var go = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-            go.name = $"Enemy Companion ({entity})";
-            go.transform.SetPositionAndRotation(localTransform.Position, localTransform.Rotation);
-
-            // Компаньон не участвует в физике — двигает его ECS-система, а колайдер
-            // только мешал бы проходу других персонажей.
-            if (go.TryGetComponent<Collider>(out var collider))
-                Object.Destroy(collider);
-
-            var behaviorAgent = go.AddComponent<Unity.Behavior.BehaviorGraphAgent>();
-            behaviorAgent.Graph = species.BehaviorGraph.Value;
-
-            go.AddComponent<EnemyCompanionAgent>();
+            EntityManager.AddComponent<EnemyCompanionSpawned>(entity);
         }
+
+        protected override Unity.Behavior.BehaviorGraph GetBehaviorGraph(Entity entity)
+        {
+            return EntityManager.GetComponentData<EnemySpecies>(entity).BehaviorGraph.Value;
+        }
+
+        protected override MonoBehaviour AttachBridge(GameObject companion)
+        {
+            return companion.AddComponent<EnemyCompanionAgent>();
+        }
+
+        protected override string CompanionName(Entity entity) => $"Enemy Companion ({entity})";
     }
 }

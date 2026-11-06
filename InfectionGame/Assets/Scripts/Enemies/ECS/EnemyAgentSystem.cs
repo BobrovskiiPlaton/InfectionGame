@@ -1,3 +1,4 @@
+using InfectionGame.Actors;
 using InfectionGame.Perception;
 using Unity.Burst;
 using Unity.Entities;
@@ -6,41 +7,6 @@ using Unity.Transforms;
 
 namespace InfectionGame.Enemies.ECS
 {
-    internal static class EnemyMotion
-    {
-        public static void MoveTowards(
-            ref LocalTransform transform,
-            float3 goal,
-            float speed,
-            float deltaTime)
-        {
-            if (speed <= 0f)
-                return;
-
-            float3 toGoal = goal - transform.Position;
-            float distance = math.length(toGoal);
-
-            if (distance <= 0.001f)
-                return;
-
-            float3 direction = toGoal / distance;
-            float step = math.min(distance, speed * deltaTime);
-
-            transform.Position += direction * step;
-            transform.Rotation = FaceTowards(transform.Position, goal, transform.Rotation);
-        }
-
-        public static quaternion FaceTowards(float3 from, float3 goal, quaternion current)
-        {
-            float3 direction = goal - from;
-
-            if (math.lengthsq(direction) < 1e-6f)
-                return current;
-
-            return quaternion.LookRotationSafe(direction, math.up());
-        }
-    }
-
     /// <summary>
     /// Исполняет решение behavior tree: три независимых job'а, по одному на состояние.
     /// Состояние — это enableable-тег (<see cref="EnemyStateIdle"/> / Chase / Attack),
@@ -49,6 +15,9 @@ namespace InfectionGame.Enemies.ECS
     /// Здесь НЕТ переходов между состояниями и НЕТ switch: раньше тот же класс содержал
     /// state machine, который дублировал логику дерева поведения и перетирал её решения.
     /// Теперь единственным источником решений является граф.
+    ///
+    /// Кинематика (<see cref="ActorMotion"/>) и работа с точкой брожения
+    /// (<see cref="WanderTargetMath"/>) общие для всех акторов — NPC переиспользует их же.
     /// </summary>
     [BurstCompile]
     [UpdateInGroup(typeof(SimulationSystemGroup))]
@@ -93,7 +62,7 @@ namespace InfectionGame.Enemies.ECS
             if (perception.Primary == Entity.Null)
                 return;
 
-            EnemyMotion.MoveTowards(
+            ActorMotion.MoveTowards(
                 ref transform, perception.LastKnownPosition, species.MoveSpeed, DeltaTime);
         }
     }
@@ -122,7 +91,7 @@ namespace InfectionGame.Enemies.ECS
             if (perception.Primary == Entity.Null)
                 return;
 
-            transform.Rotation = EnemyMotion.FaceTowards(
+            transform.Rotation = ActorMotion.FaceTowards(
                 transform.Position, perception.LastKnownPosition, transform.Rotation);
 
             if (agent.AttackCooldown <= 0f)
@@ -135,7 +104,7 @@ namespace InfectionGame.Enemies.ECS
 
     /// <summary>
     /// Бродить к точке, которую выдал behavior tree. Дойдя — снимает точку, чтобы граф
-    /// выдал новую.
+    /// выдал новую. Сам враг точку никогда не перебирает: это делает только граф.
     /// </summary>
     [BurstCompile]
     [WithAll(typeof(EnemyStateIdle))]
@@ -146,22 +115,18 @@ namespace InfectionGame.Enemies.ECS
         void Execute(
             ref LocalTransform transform,
             in EnemySpecies species,
-            ref EnemyWanderTarget wander)
+            ref WanderTarget wander)
         {
-            if (wander.HasTarget > 0.5f)
-                wander.TimeSinceAssigned += DeltaTime;
+            WanderTargetMath.Tick(ref wander, DeltaTime);
 
             if (wander.HasTarget <= 0.5f)
                 return;
 
-            EnemyMotion.MoveTowards(
+            ActorMotion.MoveTowards(
                 ref transform, wander.Position, species.PassiveMoveSpeed, DeltaTime);
 
-            if (math.distancesq(transform.Position, wander.Position) < 0.25f)
-            {
-                wander.HasTarget = 0f;
-                wander.TimeSinceAssigned = 0f;
-            }
+            if (WanderTargetMath.HasArrived(transform.Position, wander))
+                wander = WanderTargetMath.Cleared();
         }
     }
 }

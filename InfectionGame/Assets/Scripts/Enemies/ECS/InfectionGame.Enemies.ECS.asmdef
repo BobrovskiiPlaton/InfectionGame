@@ -9,7 +9,8 @@
         "Unity.Collections",
         "Unity.Burst",
         "Unity.Behavior",
-        "InfectionGame.Perception"
+        "InfectionGame.Perception",
+        "InfectionGame.Actors"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

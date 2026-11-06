@@ -1,3 +1,4 @@
+using InfectionGame.Actors;
 using InfectionGame.Enemies.Species;
 using Unity.Entities;
 using UnityEngine;
@@ -33,7 +34,7 @@ namespace InfectionGame.Enemies.ECS
                     BehaviorGraph = species.behaviorGraph,
                 });
                 AddComponent(entity, new EnemyAgent());
-                AddComponent(entity, new EnemyWanderTarget());
+                AddComponent(entity, new WanderTarget());
 
                 // Состояние — enableable-теги. Стартуем в Idle, остальные выключены;
                 // переключает их behavior tree через companion-мост.
@@ -42,6 +43,12 @@ namespace InfectionGame.Enemies.ECS
                 AddComponent<EnemyStateAttack>(entity);
                 SetComponentEnabled<EnemyStateChase>(entity, false);
                 SetComponentEnabled<EnemyStateAttack>(entity, false);
+
+                // Враг — ещё и цель для перцепции: без этого NPC его физически не заметит.
+                AddComponent(entity, new InfectionGame.Perception.DetectionTarget
+                {
+                    Faction = InfectionGame.Perception.TargetFaction.Enemy,
+                });
 
                 AddComponent(entity, new InfectionGame.Perception.DetectionSensor
                 {

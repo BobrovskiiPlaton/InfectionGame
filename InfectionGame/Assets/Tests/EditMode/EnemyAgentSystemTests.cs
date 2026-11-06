@@ -1,3 +1,4 @@
+using InfectionGame.Actors;
 using InfectionGame.Enemies.ECS;
 using NUnit.Framework;
 using Unity.Core;
@@ -62,7 +63,7 @@ namespace InfectionGame.Enemies.Tests
                 AttackDamage = 10f,
             });
             _em.AddComponentData(entity, new EnemyAgent());
-            _em.AddComponentData(entity, new EnemyWanderTarget());
+            _em.AddComponentData(entity, new WanderTarget());
             _em.AddComponentData(entity, new InfectionGame.Perception.DetectionState());
 
             _em.AddComponent<EnemyStateIdle>(entity);
@@ -203,7 +204,7 @@ namespace InfectionGame.Enemies.Tests
         {
             Entity enemy = CreateEnemy(float3.zero, EnemyState.Idle, moveSpeed: 4f);
 
-            _em.SetComponentData(enemy, new EnemyWanderTarget
+            _em.SetComponentData(enemy, new WanderTarget
             {
                 Position = new float3(10f, 0f, 0f),
                 HasTarget = 1f,
@@ -245,7 +246,7 @@ namespace InfectionGame.Enemies.Tests
             // точку каждый тик и враг дёргается.
             Entity enemy = CreateEnemy(float3.zero, EnemyState.Idle);
 
-            _em.SetComponentData(enemy, new EnemyWanderTarget
+            _em.SetComponentData(enemy, new WanderTarget
             {
                 Position = new float3(10f, 0f, 0f),
                 HasTarget = 1f,
@@ -253,7 +254,7 @@ namespace InfectionGame.Enemies.Tests
 
             Run(deltaTime: 0.5f);
 
-            var wander = _em.GetComponentData<EnemyWanderTarget>(enemy);
+            var wander = _em.GetComponentData<WanderTarget>(enemy);
             Assert.That(wander.TimeSinceAssigned, Is.EqualTo(0.5f).Within(kTolerance));
         }
 
@@ -262,7 +263,7 @@ namespace InfectionGame.Enemies.Tests
         {
             Entity enemy = CreateEnemy(float3.zero, EnemyState.Idle);
 
-            _em.SetComponentData(enemy, new EnemyWanderTarget
+            _em.SetComponentData(enemy, new WanderTarget
             {
                 Position = new float3(0.1f, 0f, 0f),
                 HasTarget = 1f,
@@ -270,7 +271,7 @@ namespace InfectionGame.Enemies.Tests
 
             Run(deltaTime: 1f);
 
-            var wander = _em.GetComponentData<EnemyWanderTarget>(enemy);
+            var wander = _em.GetComponentData<WanderTarget>(enemy);
             Assert.That(wander.HasTarget, Is.EqualTo(0f).Within(kTolerance),
                 "дойдя до точки, враг должен её сбросить");
             Assert.That(wander.TimeSinceAssigned, Is.EqualTo(0f).Within(kTolerance));
@@ -294,7 +295,7 @@ namespace InfectionGame.Enemies.Tests
         {
             Entity enemy = CreateEnemy(float3.zero, EnemyState.Idle);
 
-            _em.SetComponentData(enemy, new EnemyWanderTarget
+            _em.SetComponentData(enemy, new WanderTarget
             {
                 Position = new float3(0.1f, 0f, 0f),
                 HasTarget = 1f,

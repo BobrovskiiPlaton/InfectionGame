@@ -1,5 +1,5 @@
 using System;
-using InfectionGame.Enemies.ECS;
+using InfectionGame.Actors;
 using Unity.Behavior;
 using Unity.Properties;
 using UnityEngine;
@@ -8,7 +8,8 @@ namespace InfectionGame.Enemies.Behavior
 {
     /// <summary>
     /// Условие: воспринятая цель ближе заданной дистанции. Используется, чтобы переключиться
-    /// между преследованием и атакой.
+    /// между преследованием и атакой. Через <see cref="IActorCompanionAgent"/> служит любому
+    /// актору — узел не дублируется под NPC.
     /// </summary>
     [Serializable, GeneratePropertyBag]
     [Condition(
@@ -27,7 +28,9 @@ namespace InfectionGame.Enemies.Behavior
             if (GameObject == null)
                 return false;
 
-            if (!GameObject.TryGetComponent<EnemyCompanionAgent>(out var agent))
+            IActorCompanionAgent agent = GameObject.GetComponent<IActorCompanionAgent>();
+
+            if (agent == null)
                 return false;
 
             if (!agent.TryGetPerception(out var perception))

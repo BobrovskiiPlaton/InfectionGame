@@ -94,16 +94,8 @@ namespace InfectionGame.Enemies.ECS
     }
 
     /// <summary>
-    /// Точка, куда враг идёт, когда цели нет. Поведение пишет её, ECS-система движения
-    /// ведёт туда врага. <see cref="TimeSinceAssigned"/> нужен, чтобы поведение не
-    /// перебирало точку каждый тик и чтобы освобождать врага, упёршегося в стену.
+    /// Точка брожения у врага — общий <c>InfectionGame.Actors.WanderTarget</c>. Вынесена
+    /// в общий слой, чтобы тот же компонент и ту же политику «не перебирать точку каждый
+    /// тик» использовал NPC.
     /// </summary>
-    public struct EnemyWanderTarget : IComponentData
-    {
-        public float3 Position;
-        public float HasTarget;
-
-        /// <summary>Сколько секунд враг уже идёт к этой точке.</summary>
-        public float TimeSinceAssigned;
-    }
 }

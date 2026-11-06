@@ -1,5 +1,5 @@
 using System;
-using InfectionGame.Enemies.ECS;
+using InfectionGame.Actors;
 using Unity.Behavior;
 using Unity.Mathematics;
 using Unity.Properties;
@@ -8,13 +8,17 @@ using UnityEngine;
 namespace InfectionGame.Enemies.Behavior
 {
     /// <summary>
-    /// Гарантирует, что у врага есть куда идти. Новую точку выбирает ТОЛЬКО когда её нет —
-    /// либо враг уже дошёл (ECS сбрасывает <c>HasTarget</c>), либо слишком долго топчется
+    /// Гарантирует, что у актора есть куда идти. Новую точку выбирает ТОЛЬКО когда её нет —
+    /// либо актор уже дошёл (ECS сбрасывает <c>HasTarget</c>), либо слишком долго топчется
     /// на одном месте (<c>RestartAfterSeconds</c>, спасение от упёршегося в стену).
     ///
     /// Раньше узел безусловно перебирал точку на каждом проходе, а корень графа стоит под
     /// Repeat — то есть ~60 новых случайных целей в секунду. Враг на каждом тике разворачивался
     /// в новую сторону и дёргался.
+    ///
+    /// Через <see cref="IActorCompanionAgent"/> и <see cref="WanderTargetMath"/> узел служит
+    /// любому актору (враг, NPC) и не дублируется. Состояние он сознательно не проверяет:
+    /// решать, когда бродить, — работа графа, а не узла.
     /// </summary>
     [Serializable, GeneratePropertyBag]
     [NodeDescription(
@@ -38,29 +42,26 @@ namespace InfectionGame.Enemies.Behavior
             if (GameObject == null)
                 return Status.Failure;
 
-            if (!GameObject.TryGetComponent<EnemyCompanionAgent>(out var agent))
+            IActorCompanionAgent agent = GameObject.GetComponent<IActorCompanionAgent>();
+
+            if (agent == null)
             {
-                LogFailure($"На '{GameObject.name}' нет {nameof(EnemyCompanionAgent)}.");
+                LogFailure($"На '{GameObject.name}' нет моста к ECS ({nameof(IActorCompanionAgent)}).");
                 return Status.Failure;
             }
 
-            // Точка ещё жива — оставляем как есть. Именно это убирает дёрганье.
-            if (agent.TryGetWanderTarget(out var wander) && wander.HasTarget > 0.5f)
-            {
-                float timeout = RestartAfterSeconds?.Value ?? 0f;
+            agent.TryGetWanderTarget(out var wander);
+            float timeout = RestartAfterSeconds?.Value ?? 0f;
 
-                if (timeout <= 0f || wander.TimeSinceAssigned < timeout)
-                    return Status.Success;
-            }
+            // Точка ещё жива — оставляем как есть. Именно это убирает дёрганье.
+            if (!WanderTargetMath.ShouldAllocate(wander, timeout))
+                return Status.Success;
 
             float radius = math.max(0.5f, Radius?.Value ?? 5f);
-
-            // Случайная точка в диске вокруг врага.
-            float2 offset = UnityEngine.Random.insideUnitCircle * radius;
-            float3 target = new float3(
-                GameObject.transform.position.x + offset.x,
-                GameObject.transform.position.y,
-                GameObject.transform.position.z + offset.y);
+            float3 target = WanderTargetMath.PointInDisk(
+                GameObject.transform.position,
+                UnityEngine.Random.insideUnitCircle,
+                radius);
 
             agent.SetWanderTarget(target);
             return Status.Success;
