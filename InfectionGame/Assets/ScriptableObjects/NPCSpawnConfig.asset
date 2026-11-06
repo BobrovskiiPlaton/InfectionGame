@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: NPCSpawnConfig
   m_EditorClassIdentifier: Assembly-CSharp::NPCSpawnConfigSO
   npcCount: 100
-  spawnRadius: 30
+  spawnRadius: 20
+  spawnHeight: 1
