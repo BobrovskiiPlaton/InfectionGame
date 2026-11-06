@@ -1,5 +1,7 @@
 using Unity.Entities;
 using UnityEngine;
+using Unity.Mathematics;
+using Unity.Rendering;
 using static InfectionComponent;
 
 public class NPCAuthoring : MonoBehaviour
@@ -22,7 +24,8 @@ public class NPCAuthoring : MonoBehaviour
                MoveSpeed = authoring.config.moveSpeed,
                Direction = Unity.Mathematics.float3.zero,
                FleeRadius = authoring.config.fleeRadius,
-               FleeSpeed = authoring.config.fleeSpeed
+               FleeSpeed = authoring.config.fleeSpeed,
+               IsFleeing = 0
             });
 
             AddComponent(entity, new HealthComponent
@@ -43,6 +46,32 @@ public class NPCAuthoring : MonoBehaviour
                 ChangeDirectionTimer = 0f,
                 RandomState = 0
             });
+
+            Color healthy = authoring.config.normalColor;
+            Color infected = authoring.config.infectedColor;
+
+            float4 healthyColor = new float4(
+                healthy.r, healthy.g, healthy.b, healthy.a
+            );
+
+            float4 infectedColor = new float4(
+                infected.r, infected.g, infected.b, infected.a
+            );
+
+            AddComponent(entity, new NPCVisualColors
+            {
+                HealthyColor = healthyColor,
+                InfectedColor = infectedColor
+            });
+
+            AddComponent(entity, new URPMaterialPropertyBaseColor
+            {
+                Value = healthyColor
+            });
+
+            AddComponent<NPCInfectionHitRequest>(entity);
+
+            AddComponent<NPCTreatmentRequest>(entity);
         }
     }
 

@@ -1,6 +1,6 @@
+
 using Unity.Entities;
 using Unity.Mathematics;
-using UnityEngine;
 
 public struct NPCMovementComponent : IComponentData
 {
@@ -8,4 +8,6 @@ public struct NPCMovementComponent : IComponentData
     public float3 Direction;
     public float FleeRadius;
     public float FleeSpeed;
+
+    public byte IsFleeing;
 }

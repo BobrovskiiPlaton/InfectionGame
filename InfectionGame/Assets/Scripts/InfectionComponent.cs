@@ -6,6 +6,7 @@ public struct InfectionComponent : IComponentData
     public InfectionState State;
     public float TimeRemaining;
     public float TreatmentProgress;
+    public float InfectionDuration;
 
 
     public enum InfectionState : byte

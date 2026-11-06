@@ -1,10 +1,13 @@
 
+using InfectionGame.Perception;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 
 [BurstCompile]
-[UpdateBefore(typeof(NPCMovementSystem))]
+[UpdateInGroup(typeof(SimulationSystemGroup))]
+[UpdateAfter(typeof(VisionDetectionSystem))]
+[UpdateBefore(typeof(NPCFleeSystem))]
 public partial struct NPCWanderSystem : ISystem
 {
     [BurstCompile]

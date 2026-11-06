@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 334450164262329465}
   - component: {fileID: 5237555322232919285}
   - component: {fileID: 4473480976951418147}
+  - component: {fileID: 5320188194958113119}
+  - component: {fileID: 6230034260539367495}
   m_Layer: 0
   m_Name: NPC_ECS
   m_TagString: Untagged
@@ -104,3 +106,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCAuthoring
   config: {fileID: 11400000, guid: b1e92df4d4530414e935eaa4d091a1a7, type: 2}
+--- !u!114 &5320188194958113119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 622784789094160124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82c5b11fcfcb40e4d8d450d2462c7901, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: InfectionGame.Perception::InfectionGame.Perception.PerceptionSensorECSBehavior
+  targets: 4
+  memoryDuration: 0
+  visionEnabled: 1
+  visionRange: 20
+  fieldOfViewDegrees: 360
+  eyeOffsetLocal: {x: 0, y: 1.6, z: 0}
+--- !u!114 &6230034260539367495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 622784789094160124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96d069b5fe0205247ba5e6e817eb4bbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: InfectionGame.Perception::InfectionGame.Perception.PerceptionTargetECSBehavior
+  faction: 2
+  detectable: 1
