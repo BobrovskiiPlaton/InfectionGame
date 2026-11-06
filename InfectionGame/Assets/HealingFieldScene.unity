@@ -2583,6 +2583,19 @@ MonoBehaviour:
   moveSpeed: 5
   jumpForce: 5
   mouseSensitivity: 0.15
+--- !u!114 &1626412094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1626412087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92d5ea3100f7d0344957fe2328ef3d42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerRegister
+  playerReference: {fileID: 11400000, guid: 8c83754bd70127d4d9929012f0ebe88d, type: 2}
 --- !u!1 &1797882164
 GameObject:
   m_ObjectHideFlags: 0
@@ -2915,6 +2928,59 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 7.1499996, y: 2.08, z: -3.76}
   m_LocalScale: {x: 2, y: 0.5, z: 2}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1874278270
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1874278272}
+  - component: {fileID: 1874278271}
+  m_Layer: 0
+  m_Name: NPC_ECS_SubScene
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1874278271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1874278270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45a335734b1572644a6a5d09d87adc65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Scenes::Unity.Scenes.SubScene
+  _SceneAsset: {fileID: 102900000, guid: 718d4064b3b864f40a9596c3bc91cb0b, type: 3}
+  _HierarchyColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  AutoLoadScene: 1
+  _SceneGUID:
+    Value:
+      x: 1174722583
+      y: 1330023227
+      z: 1013537184
+      w: 2965117387
+--- !u!4 &1874278272
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1874278270}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -3293,19 +3359,6 @@ Transform:
   - {fileID: 793470629}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1626412094
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1626412087}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92d5ea3100f7d0344957fe2328ef3d42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerRegister
-  playerReference: {fileID: 11400000, guid: 8c83754bd70127d4d9929012f0ebe88d, type: 2}
 --- !u!1001 &1024084154182398372
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3375,6 +3428,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: NPCManager
       objectReference: {fileID: 0}
+    - target: {fileID: 6084130216759217298, guid: 9aff49d5ce75bf543b7e2b85926019a6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8887225255492824997, guid: 9aff49d5ce75bf543b7e2b85926019a6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -3435,3 +3492,4 @@ SceneRoots:
   - {fileID: 1797882168}
   - {fileID: 1024084154182398372}
   - {fileID: 7569564162620867922}
+  - {fileID: 1874278272}
