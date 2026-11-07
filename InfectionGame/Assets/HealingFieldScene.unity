@@ -2929,7 +2929,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerControls
   rb: {fileID: 1626412092}
   cameraTransform: {fileID: 256680863}
-  moveSpeed: 5
+  moveSpeed: 20
   jumpForce: 5
   mouseSensitivity: 0.15
 --- !u!114 &1626412094
@@ -3732,6 +3732,10 @@ PrefabInstance:
     - target: {fileID: 4224989539297207045, guid: c2d80ab151b8650409d3142651455238, type: 3}
       propertyPath: m_Name
       value: EnemyManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 4224989539297207045, guid: c2d80ab151b8650409d3142651455238, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7007479041112335453, guid: c2d80ab151b8650409d3142651455238, type: 3}
       propertyPath: m_LocalPosition.x
