@@ -2799,7 +2799,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1626412087}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 97ace4d5e5df92d4d9ea2facc34b1c60, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -2929,7 +2929,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerControls
   rb: {fileID: 1626412092}
   cameraTransform: {fileID: 256680863}
-  moveSpeed: 20
+  moveSpeed: 5
   jumpForce: 5
   mouseSensitivity: 0.15
 --- !u!114 &1626412094
@@ -3735,7 +3735,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4224989539297207045, guid: c2d80ab151b8650409d3142651455238, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7007479041112335453, guid: c2d80ab151b8650409d3142651455238, type: 3}
       propertyPath: m_LocalPosition.x
