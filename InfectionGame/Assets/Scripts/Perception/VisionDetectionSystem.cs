@@ -13,11 +13,6 @@ namespace InfectionGame.Perception
         public float3 Position;
     }
 
-    /// <summary>
-    /// Общая работа с буфером <see cref="DetectedTarget"/>: добавить/обновить запись о цели,
-    /// которую заметил один из сенсоров. Вынесена, чтобы Vision и Hearing job'ы не
-    /// дублировали логику и вели себя одинаково.
-    /// </summary>
     internal static class PerceptionBufferOps
     {
         public static void RecordSensed(
@@ -73,10 +68,6 @@ namespace InfectionGame.Perception
         }
     }
 
-    /// <summary>
-    /// Тикает память по всем известным целям и удаляет забытых. Идёт первым, чтобы
-    /// сенсорные job'ы ниже писали в уже очищенный буфер.
-    /// </summary>
     [BurstCompile]
     public partial struct PerceptionMemoryTickJob : IJobEntity
     {
@@ -122,10 +113,6 @@ namespace InfectionGame.Perception
         }
     }
 
-    /// <summary>
-    /// Зрение: конус вокруг направления взгляда. Работает только при положительном
-    /// <see cref="VisionSensor.Range"/>, поэтому враг без зрения не тратит на него время.
-    /// </summary>
     [BurstCompile]
     public partial struct VisionSenseJob : IJobEntity
     {
@@ -169,10 +156,6 @@ namespace InfectionGame.Perception
         }
     }
 
-    /// <summary>
-    /// Слух: всенаправленный, только по расстоянию. Именно он ловит цель, подкравшуюся
-    /// со спины на дистанцию <see cref="HearingSensor.Radius"/>, которую зрение не видит.
-    /// </summary>
     [BurstCompile]
     public partial struct HearingSenseJob : IJobEntity
     {
@@ -212,10 +195,6 @@ namespace InfectionGame.Perception
         }
     }
 
-    /// <summary>
-    /// Выбор primary-цели: ближайшая из замеченных в этом кадре, иначе — самая свежая
-    /// из запомненных.
-    /// </summary>
     [BurstCompile]
     public partial struct PerceptionPrimarySelectJob : IJobEntity
     {
@@ -296,13 +275,12 @@ namespace InfectionGame.Perception
             var targets = new NativeList<TargetSample>(
                 _targetQuery.CalculateEntityCount(), Allocator.TempJob);
 
+            // джобы последовательно, все пишут в detected буффер
             state.Dependency = new GatherPerceptionTargetsJob
             {
                 Targets = targets,
             }.Schedule(state.Dependency);
 
-            // Job'ы идут строго последовательно: все пишут в DetectionState и
-            // DetectedTarget одной и той же сущности, параллельно им быть нельзя.
             state.Dependency = new PerceptionMemoryTickJob
             {
                 DeltaTime = SystemAPI.Time.DeltaTime,

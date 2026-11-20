@@ -6,11 +6,6 @@ using UnityEngine;
 
 namespace InfectionGame.Enemies.Behavior
 {
-    /// <summary>
-    /// Условие: воспринятая цель ближе заданной дистанции. Используется, чтобы переключиться
-    /// между преследованием и атакой. Через <see cref="IActorCompanionAgent"/> служит любому
-    /// актору — узел не дублируется под NPC.
-    /// </summary>
     [Serializable, GeneratePropertyBag]
     [Condition(
         name: "Is Target In Range",
@@ -20,7 +15,6 @@ namespace InfectionGame.Enemies.Behavior
         id: "c3d4e5f60718293a4b5c6d7e8f901234")]
     public partial class IsTargetInRangeCondition : Unity.Behavior.Condition
     {
-        [Tooltip("Дистанция в метрах.")]
         [SerializeReference] public BlackboardVariable<float> Distance;
 
         public override bool IsTrue()

@@ -7,18 +7,6 @@ using Unity.Transforms;
 
 namespace InfectionGame.Enemies.ECS
 {
-    /// <summary>
-    /// Исполняет решение behavior tree: три независимых job'а, по одному на состояние.
-    /// Состояние — это enableable-тег (<see cref="EnemyStateIdle"/> / Chase / Attack),
-    /// который включает граф через companion-мост.
-    ///
-    /// Здесь НЕТ переходов между состояниями и НЕТ switch: раньше тот же класс содержал
-    /// state machine, который дублировал логику дерева поведения и перетирал её решения.
-    /// Теперь единственным источником решений является граф.
-    ///
-    /// Кинематика (<see cref="ActorMotion"/>) и работа с точкой брожения
-    /// (<see cref="WanderTargetMath"/>) общие для всех акторов — NPC переиспользует их же.
-    /// </summary>
     [BurstCompile]
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(VisionDetectionSystem))]
@@ -46,7 +34,6 @@ namespace InfectionGame.Enemies.ECS
         }
     }
 
-    /// <summary>Идти к последней известной позиции цели.</summary>
     [BurstCompile]
     [WithAll(typeof(EnemyStateChase))]
     public partial struct ChaseMoveJob : IJobEntity
@@ -58,7 +45,6 @@ namespace InfectionGame.Enemies.ECS
             in EnemySpecies species,
             in DetectionState perception)
         {
-            // Цели нет — стоять на месте; следующее состояние выдаст граф.
             if (perception.Primary == Entity.Null)
                 return;
 
@@ -67,10 +53,6 @@ namespace InfectionGame.Enemies.ECS
         }
     }
 
-    /// <summary>
-    /// Стоять и бить. Кулдаун — чистая механика, урон наносится отдельно, когда у целей
-    /// появится здоровье.
-    /// </summary>
     [BurstCompile]
     [WithAll(typeof(EnemyStateAttack))]
     public partial struct AttackJob : IJobEntity
@@ -102,10 +84,6 @@ namespace InfectionGame.Enemies.ECS
         }
     }
 
-    /// <summary>
-    /// Бродить к точке, которую выдал behavior tree. Дойдя — снимает точку, чтобы граф
-    /// выдал новую. Сам враг точку никогда не перебирает: это делает только граф.
-    /// </summary>
     [BurstCompile]
     [WithAll(typeof(EnemyStateIdle))]
     public partial struct WanderJob : IJobEntity

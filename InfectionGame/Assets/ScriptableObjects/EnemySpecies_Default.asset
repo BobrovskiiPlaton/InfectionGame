@@ -18,8 +18,8 @@ MonoBehaviour:
   hearingRadius: 4
   moveSpeed: 4
   passiveMoveSpeed: 1
+  memoryDuration: 3
+  behaviorGraph: {fileID: -376817774139861446, guid: 87dc64d3f58502746ba2df055254ba7d, type: 2}
   attackDistance: 2
   attackInterval: 1.5
   attackDamage: 10
-  memoryDuration: 3
-  behaviorGraph: {fileID: -376817774139861446, guid: 87dc64d3f58502746ba2df055254ba7d, type: 2}

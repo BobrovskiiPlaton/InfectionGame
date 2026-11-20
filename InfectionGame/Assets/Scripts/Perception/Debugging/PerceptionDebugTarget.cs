@@ -5,18 +5,11 @@ using UnityEngine;
 
 namespace InfectionGame.Perception
 {
-    /// <summary>
-    /// Помечает GameObject как цель для ECS-перцепции: создаёт ECS-сущность с
-    /// <see cref="DetectionTarget"/> и каждый кадр синхронизирует в неё позицию и поворот
-    /// этого объекта. Нужен только для ручного теста в сцене — в боевом коде цель должна
-    /// создаваться Baker'ом через SubScene.
-    /// </summary>
     [DisallowMultipleComponent]
     public class PerceptionDebugTarget : MonoBehaviour
     {
         [SerializeField] private TargetFaction faction = TargetFaction.Player;
 
-        [Tooltip("Выключите, чтобы сделать объект невидимым для всех сенсоров, не убирая его из сцены.")]
         [SerializeField] private bool detectable = true;
 
         Entity _entity;

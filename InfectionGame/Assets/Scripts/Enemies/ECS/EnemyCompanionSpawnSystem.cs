@@ -5,11 +5,6 @@ using UnityEngine;
 
 namespace InfectionGame.Enemies.ECS
 {
-    /// <summary>
-    /// Спавнит companion GameObject для каждой ECS-сущности врага. Общая механика спавна —
-    /// в <see cref="CompanionSpawnSystemBase"/>; здесь только враговое: запрос, маркер,
-    /// источник behavior graph и мост.
-    /// </summary>
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(EnemyAgentSystem))]
     public partial class EnemyCompanionSpawnSystem : CompanionSpawnSystemBase
