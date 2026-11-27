@@ -14,10 +14,6 @@ namespace InfectionGame.Perception
         public float3 Position;
     }
 
-    /// <summary>
-    /// Цели, разложенные по фракциям при сборе: сенсор итерирует только интересные
-    /// ему корзины (сенсор врага пропускает корзину врагов), это снимает O(S×T).
-    /// </summary>
     public struct PerceptionTargetBuckets
     {
         public NativeList<TargetSample> Player;
@@ -365,8 +361,6 @@ namespace InfectionGame.Perception
             PerceptionTargetBuckets buckets = PerceptionTargetBuckets.Create(
                 _targetQuery.CalculateEntityCount(), Allocator.TempJob);
 
-            // сбор однопоточный (общие списки), дальше каждый сенсор пишет только
-            // в свои буферы — поэтому джобы чувств параллельны между сущностями
             state.Dependency = new GatherPerceptionTargetsJob
             {
                 Buckets = buckets,
@@ -375,7 +369,7 @@ namespace InfectionGame.Perception
             state.Dependency = new PerceptionMemoryTickJob
             {
                 DeltaTime = SystemAPI.Time.DeltaTime,
-            }.ScheduleParallel(state.Dependency);
+            }.ScheduleParallel(state.Dependency); // переведено на Parallel
 
             state.Dependency = new VisionSenseJob
             {
