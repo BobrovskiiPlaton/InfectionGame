@@ -8,45 +8,92 @@ using Unity.Transforms;
 [BurstCompile]
 [UpdateInGroup(typeof(SimulationSystemGroup))]
 [UpdateAfter(typeof(NPCWanderSystem))]
-[UpdateBefore(typeof(NPCMovementSystem))]
+[UpdateBefore(typeof(NPCObstacleAvoidanceSystem))]
 public partial struct NPCFleeSystem : ISystem
 {
     private const int DirectionCount = 16;
     private const float PredictionTime = 1.5f;
+    private const float RecalculationDistanceSq = 4f;
 
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        foreach (var (movement, transform, targets) in
+        foreach (var (movement, transform, fleeState, targets, snapshots) in
             SystemAPI.Query<
                 RefRW<NPCMovementComponent>,
                 RefRO<LocalTransform>,
-                DynamicBuffer<DetectedTarget>>()
+                RefRW<NPCFleeState>,
+                DynamicBuffer<DetectedTarget>,
+                DynamicBuffer<NPCFleeThreatSnapshot>>()
                 .WithAll<NPCComponent>())
         {
             float3 position = transform.ValueRO.Position;
 
-            bool hasEnemies = false;
+            int visibleCount = 0;
+            bool recalculate = false;
 
             for (int i = 0; i < targets.Length; i++)
             {
-                if (IsVisibleEnemy(targets[i]))
+                DetectedTarget enemy = targets[i];
+
+                if (!IsVisibleEnemy(enemy))
+                    continue;
+
+                visibleCount++;
+
+                float3 relativePosition =
+                    enemy.LastKnownPosition - position;
+
+                relativePosition.y = 0f;
+
+                bool found = false;
+
+                for (int j = 0; j < snapshots.Length; j++)
                 {
-                    hasEnemies = true;
+                    if (snapshots[j].Target != enemy.Target)
+                        continue;
+
+                    found = true;
+
+                    if (math.lengthsq(
+                        relativePosition -
+                        snapshots[j].RelativePosition
+                    ) >= RecalculationDistanceSq)
+                    {
+                        recalculate = true;
+                    }
+
                     break;
                 }
+
+                if (!found)
+                    recalculate = true;
             }
 
-            if (!hasEnemies)
+            if (visibleCount != snapshots.Length)
+                recalculate = true;
+
+            if (visibleCount == 0)
             {
+                if (snapshots.Length > 0)
+                    snapshots.Clear();
+
                 movement.ValueRW.IsFleeing = 0;
                 continue;
             }
 
-            float3 previousDirection =
-                math.normalizesafe(
-                    movement.ValueRO.Direction
-                );
+            if (!recalculate)
+            {
+                movement.ValueRW.Direction =
+                    fleeState.ValueRO.Direction;
+
+                movement.ValueRW.IsFleeing = 1;
+                continue;
+            }
+
+            float3 previousDirection = math.normalizesafe(
+                movement.ValueRO.Direction
+            );
 
             float bestScore = float.NegativeInfinity;
             float3 bestDirection = previousDirection;
@@ -87,17 +134,13 @@ public partial struct NPCFleeSystem : ISystem
                         math.distance(position, enemyPosition);
 
                     float futureDistance =
-                        math.distance(
-                            futurePosition,
-                            enemyPosition
-                        );
+                        math.distance(futurePosition, enemyPosition);
 
                     nearestDistance = math.min(
                         nearestDistance,
                         futureDistance
                     );
 
-                    // Штраф за приближение к врагу
                     float danger =
                         1f / math.max(futureDistance, 0.5f);
 
@@ -110,11 +153,8 @@ public partial struct NPCFleeSystem : ISystem
                     }
                 }
 
-                // Предпочитаем направления,
-                // увеличивающие дистанцию до ближайшего врага
                 score += nearestDistance * 0.5f;
 
-                // Стараемся не менять направление резко
                 score += math.dot(
                     direction,
                     previousDirection
@@ -129,6 +169,29 @@ public partial struct NPCFleeSystem : ISystem
 
             movement.ValueRW.Direction = bestDirection;
             movement.ValueRW.IsFleeing = 1;
+
+            fleeState.ValueRW.Direction = bestDirection;
+
+            snapshots.Clear();
+
+            for (int i = 0; i < targets.Length; i++)
+            {
+                DetectedTarget enemy = targets[i];
+
+                if (!IsVisibleEnemy(enemy))
+                    continue;
+
+                float3 relativePosition =
+                    enemy.LastKnownPosition - position;
+
+                relativePosition.y = 0f;
+
+                snapshots.Add(new NPCFleeThreatSnapshot
+                {
+                    Target = enemy.Target,
+                    RelativePosition = relativePosition
+                });
+            }
         }
     }
 
