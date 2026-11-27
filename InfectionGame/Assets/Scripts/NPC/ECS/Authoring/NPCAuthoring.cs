@@ -1,3 +1,4 @@
+using InfectionGame.Actors;
 using Unity.Entities;
 using UnityEngine;
 using Unity.Mathematics;
@@ -38,7 +39,11 @@ public class NPCAuthoring : MonoBehaviour
             {
                 State = InfectionState.Healthy,
                 TimeRemaining = 0f,
-                TreatmentProgress = authoring.config.treatmentRequired
+                TreatmentProgress = authoring.config.treatmentRequired,
+                TreatmentRequired = authoring.config.treatmentRequired,
+                InfectionDuration = authoring.config.infectionDuration,
+                ReceivedHits = 0,
+                HitsToInfect = math.max(1, authoring.config.hitsToInfect)
             });
 
             AddComponent(entity, new NPCWanderComponent
@@ -48,6 +53,7 @@ public class NPCAuthoring : MonoBehaviour
             });
 
             Color healthy = authoring.config.normalColor;
+            Color damaged = authoring.config.damagedColor;
             Color infected = authoring.config.infectedColor;
 
             float4 healthyColor = new float4(
@@ -58,9 +64,14 @@ public class NPCAuthoring : MonoBehaviour
                 infected.r, infected.g, infected.b, infected.a
             );
 
+            float4 damagedColor = new float4(
+                damaged.r, damaged.g, damaged.b, damaged.a
+            );
+
             AddComponent(entity, new NPCVisualColors
             {
                 HealthyColor = healthyColor,
+                DamagedColor = damagedColor,
                 InfectedColor = infectedColor
             });
 
@@ -69,7 +80,8 @@ public class NPCAuthoring : MonoBehaviour
                 Value = healthyColor
             });
 
-            AddComponent<NPCInfectionHitRequest>(entity);
+            // Буфер запросов удара: в него пишет AttackJob врагов
+            AddBuffer<NPCInfectionHitRequest>(entity);
 
             AddComponent<NPCTreatmentRequest>(entity);
 

@@ -25,7 +25,9 @@ namespace InfectionGame.Enemies.ECS
             state.Dependency = new AttackJob
             {
                 DeltaTime = dt,
-            }.ScheduleParallel(state.Dependency);
+                HitRequests = SystemAPI.GetBufferLookup<
+                    InfectionGame.Actors.NPCInfectionHitRequest>(false),
+            }.Schedule(state.Dependency);
 
             state.Dependency = new WanderJob
             {
@@ -59,14 +61,17 @@ namespace InfectionGame.Enemies.ECS
     {
         public float DeltaTime;
 
+        // Буфер запросов удара на цели: при попадании пишем сюда элемент
+        public BufferLookup<InfectionGame.Actors.NPCInfectionHitRequest> HitRequests;
+
         void Execute(
+            Entity entity,
             ref LocalTransform transform,
             in EnemySpecies species,
             in DetectionState perception,
             ref EnemyAgent agent)
         {
             agent.TimeSinceAttack += DeltaTime;
-
             if (agent.AttackCooldown > 0f)
                 agent.AttackCooldown = math.max(0f, agent.AttackCooldown - DeltaTime);
 
@@ -80,6 +85,18 @@ namespace InfectionGame.Enemies.ECS
             {
                 agent.AttackCooldown = species.AttackInterval;
                 agent.TimeSinceAttack = 0f;
+
+                // Удар засчитан только вблизи; хит уходит в буфер цели
+                if (perception.Distance <= species.AttackDistance &&
+                    HitRequests.HasBuffer(perception.Primary))
+                {
+                    HitRequests[perception.Primary].Add(
+                        new InfectionGame.Actors.NPCInfectionHitRequest
+                        {
+                            Source = entity,
+                            Amount = species.AttackDamage
+                        });
+                }
             }
         }
     }
