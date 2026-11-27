@@ -29,20 +29,28 @@ public class PlayerControls : MonoBehaviour
     {
         moveInput = Vector2.zero;
 
-        if (Keyboard.current.wKey.isPressed) moveInput.y += 1f;
-        if (Keyboard.current.sKey.isPressed) moveInput.y -= 1f;
-        if (Keyboard.current.dKey.isPressed) moveInput.x += 1f;
-        if (Keyboard.current.aKey.isPressed) moveInput.x -= 1f;
+        Keyboard keyboard = Keyboard.current;
+        if (keyboard != null)
+        {
+            if (keyboard.wKey.isPressed) moveInput.y += 1f;
+            if (keyboard.sKey.isPressed) moveInput.y -= 1f;
+            if (keyboard.dKey.isPressed) moveInput.x += 1f;
+            if (keyboard.aKey.isPressed) moveInput.x -= 1f;
+        }
 
         moveInput = Vector2.ClampMagnitude(moveInput, 1f);
 
-        if (Keyboard.current.spaceKey.wasPressedThisFrame && isGrounded)
+        if (keyboard != null && keyboard.spaceKey.wasPressedThisFrame && isGrounded)
             jumpRequested = true;
 
-        Vector2 mouse = Mouse.current.delta.ReadValue();
+        Mouse mouse = Mouse.current;
 
-        yaw += mouse.x * mouseSensitivity;
-        pitch -= mouse.y * mouseSensitivity;
+        if (mouse != null)
+        {
+            Vector2 delta = mouse.delta.ReadValue();
+            yaw += delta.x * mouseSensitivity;
+            pitch -= delta.y * mouseSensitivity;
+        }
 
         pitch = Mathf.Clamp(pitch, -80f, 80f);
 
@@ -86,8 +94,10 @@ public class PlayerControls : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
-        foreach (ContactPoint contact in collision.contacts)
+        // GetContact вместо collision.contacts: тот аллоцирует массив каждый вызов
+        for (int i = 0; i < collision.contactCount; i++)
         {
+            ContactPoint contact = collision.GetContact(i);
             if (contact.normal.y > 0.5f)
             {
                 isGrounded = true;

@@ -1,6 +1,7 @@
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 
@@ -11,6 +12,60 @@ namespace InfectionGame.Perception
         public Entity Entity;
         public TargetFaction Faction;
         public float3 Position;
+    }
+
+    /// <summary>
+    /// Цели, разложенные по фракциям при сборе: сенсор итерирует только интересные
+    /// ему корзины (сенсор врага пропускает корзину врагов), это снимает O(S×T).
+    /// </summary>
+    public struct PerceptionTargetBuckets
+    {
+        public NativeList<TargetSample> Player;
+        public NativeList<TargetSample> Npc;
+        public NativeList<TargetSample> Enemy;
+
+        // Комбинации фракций — проверяются IsInteresting поэлементно
+        public NativeList<TargetSample> Other;
+
+        public static PerceptionTargetBuckets Create(int capacity, Allocator allocator)
+        {
+            capacity = math.max(1, capacity);
+            return new PerceptionTargetBuckets
+            {
+                Player = new NativeList<TargetSample>(capacity, allocator),
+                Npc = new NativeList<TargetSample>(capacity, allocator),
+                Enemy = new NativeList<TargetSample>(capacity, allocator),
+                Other = new NativeList<TargetSample>(math.max(1, capacity / 8), allocator),
+            };
+        }
+
+        public void Add(in TargetSample sample)
+        {
+            switch (sample.Faction)
+            {
+                case TargetFaction.Player:
+                    Player.Add(sample);
+                    break;
+                case TargetFaction.NPC:
+                    Npc.Add(sample);
+                    break;
+                case TargetFaction.Enemy:
+                    Enemy.Add(sample);
+                    break;
+                default:
+                    Other.Add(sample);
+                    break;
+            }
+        }
+
+        public JobHandle Dispose(JobHandle dependency)
+        {
+            dependency = Player.Dispose(dependency);
+            dependency = Npc.Dispose(dependency);
+            dependency = Enemy.Dispose(dependency);
+            dependency = Other.Dispose(dependency);
+            return dependency;
+        }
     }
 
     internal static class PerceptionBufferOps
@@ -100,11 +155,11 @@ namespace InfectionGame.Perception
     [BurstCompile]
     public partial struct GatherPerceptionTargetsJob : IJobEntity
     {
-        public NativeList<TargetSample> Targets;
+        public PerceptionTargetBuckets Buckets;
 
         void Execute(Entity entity, in DetectionTarget target, in LocalTransform transform)
         {
-            Targets.Add(new TargetSample
+            Buckets.Add(new TargetSample
             {
                 Entity = entity,
                 Faction = target.Faction,
@@ -116,7 +171,7 @@ namespace InfectionGame.Perception
     [BurstCompile]
     public partial struct VisionSenseJob : IJobEntity
     {
-        [ReadOnly] public NativeList<TargetSample> Targets;
+        [ReadOnly] public PerceptionTargetBuckets Buckets;
 
         public float DeltaTime;
 
@@ -135,16 +190,37 @@ namespace InfectionGame.Perception
             float3 eye = transform.Position + math.mul(transform.Rotation, vision.EyeOffsetLocal);
             PerceptionMath.VisionCone cone = PerceptionMath.VisionCone.FromDegrees(vision.FieldOfViewDegrees);
 
-            for (int t = 0; t < Targets.Length; t++)
+            if (PerceptionMath.IsInteresting(sensor.Targets, TargetFaction.Player))
+                SenseBucket(Buckets.Player, self, sensor, eye, forward, vision.Range, cone, detected);
+            if (PerceptionMath.IsInteresting(sensor.Targets, TargetFaction.NPC))
+                SenseBucket(Buckets.Npc, self, sensor, eye, forward, vision.Range, cone, detected);
+            if (PerceptionMath.IsInteresting(sensor.Targets, TargetFaction.Enemy))
+                SenseBucket(Buckets.Enemy, self, sensor, eye, forward, vision.Range, cone, detected);
+
+            // Комбинации фракций — всегда с поэлементной проверкой
+            SenseBucket(Buckets.Other, self, sensor, eye, forward, vision.Range, cone, detected);
+        }
+
+        private void SenseBucket(
+            NativeList<TargetSample> bucket,
+            Entity self,
+            in DetectionSensor sensor,
+            float3 eye,
+            float3 forward,
+            float range,
+            in PerceptionMath.VisionCone cone,
+            DynamicBuffer<DetectedTarget> detected)
+        {
+            for (int t = 0; t < bucket.Length; t++)
             {
-                TargetSample target = Targets[t];
+                TargetSample target = bucket[t];
                 if (target.Entity == self)
                     continue;
 
                 if (!PerceptionMath.IsInteresting(sensor.Targets, target.Faction))
                     continue;
 
-                if (!PerceptionMath.CanSee(eye, forward, target.Position, vision.Range, cone))
+                if (!PerceptionMath.CanSee(eye, forward, target.Position, range, cone))
                     continue;
 
                 PerceptionBufferOps.RecordSensed(
@@ -159,7 +235,7 @@ namespace InfectionGame.Perception
     [BurstCompile]
     public partial struct HearingSenseJob : IJobEntity
     {
-        [ReadOnly] public NativeList<TargetSample> Targets;
+        [ReadOnly] public PerceptionTargetBuckets Buckets;
 
         public float DeltaTime;
 
@@ -174,21 +250,39 @@ namespace InfectionGame.Perception
             if (hearing.Radius <= 0f)
                 return;
 
-            for (int t = 0; t < Targets.Length; t++)
+            if (PerceptionMath.IsInteresting(sensor.Targets, TargetFaction.Player))
+                SenseBucket(Buckets.Player, self, sensor, transform.Position, hearing.Radius, detected);
+            if (PerceptionMath.IsInteresting(sensor.Targets, TargetFaction.NPC))
+                SenseBucket(Buckets.Npc, self, sensor, transform.Position, hearing.Radius, detected);
+            if (PerceptionMath.IsInteresting(sensor.Targets, TargetFaction.Enemy))
+                SenseBucket(Buckets.Enemy, self, sensor, transform.Position, hearing.Radius, detected);
+
+            SenseBucket(Buckets.Other, self, sensor, transform.Position, hearing.Radius, detected);
+        }
+
+        private void SenseBucket(
+            NativeList<TargetSample> bucket,
+            Entity self,
+            in DetectionSensor sensor,
+            float3 position,
+            float radius,
+            DynamicBuffer<DetectedTarget> detected)
+        {
+            for (int t = 0; t < bucket.Length; t++)
             {
-                TargetSample target = Targets[t];
+                TargetSample target = bucket[t];
                 if (target.Entity == self)
                     continue;
 
                 if (!PerceptionMath.IsInteresting(sensor.Targets, target.Faction))
                     continue;
 
-                if (!PerceptionMath.IsHearable(transform.Position, target.Position, hearing.Radius))
+                if (!PerceptionMath.IsHearable(position, target.Position, radius))
                     continue;
 
                 PerceptionBufferOps.RecordSensed(
                     detected, target,
-                    math.distance(transform.Position, target.Position),
+                    math.distance(position, target.Position),
                     SenseKind.Hearing,
                     DeltaTime, sensor.MemoryDuration);
             }
@@ -206,13 +300,11 @@ namespace InfectionGame.Perception
         {
             int primaryIndex = -1;
             float bestDistance = float.MaxValue;
-
             for (int i = 0; i < detected.Length; i++)
             {
                 DetectedTarget entry = detected[i];
                 if (entry.TimeSinceSensed > 0f)
                     continue;
-
                 if (entry.Distance < bestDistance)
                 {
                     bestDistance = entry.Distance;
@@ -224,14 +316,12 @@ namespace InfectionGame.Perception
             {
                 float bestTime = float.MaxValue;
                 bestDistance = float.MaxValue;
-
                 for (int i = 0; i < detected.Length; i++)
                 {
                     DetectedTarget entry = detected[i];
                     bool better =
                         entry.TimeSinceSensed < bestTime ||
                         (entry.TimeSinceSensed == bestTime && entry.Distance < bestDistance);
-
                     if (better)
                     {
                         bestTime = entry.TimeSinceSensed;
@@ -272,37 +362,38 @@ namespace InfectionGame.Perception
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var targets = new NativeList<TargetSample>(
+            PerceptionTargetBuckets buckets = PerceptionTargetBuckets.Create(
                 _targetQuery.CalculateEntityCount(), Allocator.TempJob);
 
-            // джобы последовательно, все пишут в detected буффер
+            // сбор однопоточный (общие списки), дальше каждый сенсор пишет только
+            // в свои буферы — поэтому джобы чувств параллельны между сущностями
             state.Dependency = new GatherPerceptionTargetsJob
             {
-                Targets = targets,
+                Buckets = buckets,
             }.Schedule(state.Dependency);
 
             state.Dependency = new PerceptionMemoryTickJob
             {
                 DeltaTime = SystemAPI.Time.DeltaTime,
-            }.Schedule(state.Dependency);
+            }.ScheduleParallel(state.Dependency);
 
             state.Dependency = new VisionSenseJob
             {
-                Targets = targets,
+                Buckets = buckets,
                 DeltaTime = SystemAPI.Time.DeltaTime,
-            }.Schedule(state.Dependency);
+            }.ScheduleParallel(state.Dependency);
 
             state.Dependency = new HearingSenseJob
             {
-                Targets = targets,
+                Buckets = buckets,
                 DeltaTime = SystemAPI.Time.DeltaTime,
-            }.Schedule(state.Dependency);
+            }.ScheduleParallel(state.Dependency);
 
             state.Dependency = new PerceptionPrimarySelectJob
             {
-            }.Schedule(state.Dependency);
+            }.ScheduleParallel(state.Dependency);
 
-            state.Dependency = targets.Dispose(state.Dependency);
+            state.Dependency = buckets.Dispose(state.Dependency);
         }
     }
 }
