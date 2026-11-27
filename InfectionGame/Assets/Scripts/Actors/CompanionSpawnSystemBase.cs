@@ -34,7 +34,7 @@ namespace InfectionGame.Actors
         {
             LocalTransform localTransform = EntityManager.GetComponentData<LocalTransform>(entity);
 
-            var go = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            var go = new GameObject();
             go.name = CompanionName(entity);
             go.transform.SetPositionAndRotation(localTransform.Position, localTransform.Rotation);
 
