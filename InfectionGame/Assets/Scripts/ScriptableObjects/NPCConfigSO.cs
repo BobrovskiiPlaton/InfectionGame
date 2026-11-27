@@ -21,5 +21,6 @@ public class NPCConfigSO : ScriptableObject
 
     [Header("Colors")]
     public Color normalColor = Color.blue;
+    public Color damagedColor = Color.green;
     public Color infectedColor = Color.red;
 }

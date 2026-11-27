@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ccc8f66575b56b49a9788e4c566c461, type: 3}
   m_Name: EnemyConfig
   m_EditorClassIdentifier: Assembly-CSharp::EnemyConfigSO
-  moveSpeed: 3
+  moveSpeed: 4
   detectionRadius: 15
   passiveMoveSpeed: 1.5
   changeDirectionTime: 3

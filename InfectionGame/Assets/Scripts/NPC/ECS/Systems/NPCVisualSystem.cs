@@ -20,10 +20,13 @@ public partial struct NPCVisualSystem : ISystem
                 RefRW<URPMaterialPropertyBaseColor>>()
                 .WithAll<NPCComponent>())
         {
-            float4 targetColor =
-                infection.ValueRO.State == InfectionState.Infected
-                ? colors.ValueRO.InfectedColor
-                : colors.ValueRO.HealthyColor;
+            float4 targetColor;
+            if (infection.ValueRO.State == InfectionState.Infected)
+                targetColor = colors.ValueRO.InfectedColor;
+            else if (infection.ValueRO.State == InfectionState.Damaged)
+                targetColor = colors.ValueRO.DamagedColor;
+            else
+                targetColor = colors.ValueRO.HealthyColor;
 
             if (math.all(materialColor.ValueRO.Value == targetColor))
                 continue;

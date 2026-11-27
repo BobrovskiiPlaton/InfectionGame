@@ -75,23 +75,8 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        // Если преследуем NPC
         if (currentTargetNPC != null)
         {
-            NPCHealthState health =
-                currentTargetNPC.GetComponent<NPCHealthState>();
-
-            if (health != null &&
-                health.CurrentState == NPCState.Infected)
-            {
-                currentTarget = null;
-                currentTargetNPC = null;
-
-                StopAttack();
-                return;
-            }
-
-            // Запускаем корутину один раз
             StartAttack();
 
             if (distance <= config.attackDistance)
@@ -145,16 +130,6 @@ public class Enemy : MonoBehaviour
         {
             if (npc == null)
                 continue;
-
-            NPCHealthState health =
-                npc.GetComponent<NPCHealthState>();
-
-            // Игнорируем заражённых NPC
-            if (health != null &&
-                health.CurrentState == NPCState.Infected)
-            {
-                continue;
-            }
 
             float distance =
                 (npc.transform.position -
@@ -255,28 +230,8 @@ public class Enemy : MonoBehaviour
             if (currentTargetNPC == null)
                 break;
 
-            NPCHealthState health =
-                currentTargetNPC.GetComponent<NPCHealthState>();
-
-            if (health == null)
-                break;
-
-            if (health.CurrentState == NPCState.Infected)
-                break;
-
-            Vector3 toNPC =
-                currentTargetNPC.transform.position -
-                transform.position;
-
-            toNPC.y = 0f;
-
-            float distance = toNPC.magnitude;
-
-            // Удар только если враг действительно догнал NPC
-            if (distance <= config.attackDistance)
-            {
-                health.ReceiveEnemyHit();
-            }
+            // Хиты по NPC наносит ECS-враг: AttackJob пишет в буфер
+            // NPCInfectionHitRequest. У legacy GO-врага приёмника больше нет.
         }
 
         attackCoroutine = null;

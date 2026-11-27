@@ -49,6 +49,12 @@ public class EnemySpawnerAuthoring : MonoBehaviour
 
                 SpawnTimer = 0f
             });
+
+            // Префаб врага для конверсии заражённых NPC
+            AddComponent(entity, new EnemyConversionPrefab
+            {
+                Prefab = prefab
+            });
         }
     }
 }

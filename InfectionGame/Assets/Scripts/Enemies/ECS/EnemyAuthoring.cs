@@ -17,6 +17,8 @@ namespace InfectionGame.Enemies.ECS
 
                 EnemySpeciesSO species = authoring.species;
 
+                DependsOn(authoring.species);
+
                 if (species == null)
                 {
                     Debug.LogError($"{nameof(EnemyAuthoring)} на '{authoring.name}': вид не назначен.", authoring);

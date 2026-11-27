@@ -18,3 +18,10 @@ public struct EnemySpawnerComponent : IComponentData
     public float CurrentInterval;
     public float SpawnTimer;
 }
+
+// Префаб врага для конверсии заражённых NPC. Вешает EnemySpawnerAuthoring,
+// переживает удаление EnemySpawnerComponent после завершения спавна.
+public struct EnemyConversionPrefab : IComponentData
+{
+    public Entity Prefab;
+}

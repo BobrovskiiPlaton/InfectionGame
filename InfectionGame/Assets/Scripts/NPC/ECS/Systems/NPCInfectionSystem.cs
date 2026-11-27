@@ -1,4 +1,4 @@
-
+using InfectionGame.Perception;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -14,6 +14,9 @@ public partial struct NPCInfectionSystem : ISystem
     {
         float deltaTime = SystemAPI.Time.DeltaTime;
 
+        ComponentLookup<DetectionTarget> detectionLookup =
+            SystemAPI.GetComponentLookup<DetectionTarget>(false);
+
         var ecb = new EntityCommandBuffer(Allocator.Temp);
 
         foreach (var (infection, entity) in
@@ -25,21 +28,28 @@ public partial struct NPCInfectionSystem : ISystem
             if (infection.ValueRO.State != InfectionState.Infected)
                 continue;
 
-            // Проверяем успешное лечение
+            // Р”РѕР»РµС‡РёР»Рё вЂ” РІС‹Р·РґРѕСЂРѕРІР»РµРЅРёРµ
             if (infection.ValueRO.TreatmentProgress <= 0f)
             {
                 infection.ValueRW.State = InfectionState.Recovered;
                 infection.ValueRW.TimeRemaining = 0f;
+                infection.ValueRW.ReceivedHits = 0;
+                infection.ValueRW.TreatmentProgress = 0f;
+
+                // Р’С‹Р·РґРѕСЂРѕРІРµРІС€РёР№ NPC СЃРЅРѕРІР° РІРёРґРµРЅ РІСЂР°РіР°Рј
+                if (detectionLookup.HasComponent(entity))
+                    detectionLookup.SetComponentEnabled(entity, true);
+
                 continue;
             }
 
-            // Отсчёт времени заражения
+            // РћС‚СЃС‡С‘С‚ РІСЂРµРјРµРЅРё Р·Р°СЂР°Р¶РµРЅРёСЏ
             infection.ValueRW.TimeRemaining = math.max(
                 0f,
                 infection.ValueRO.TimeRemaining - deltaTime
             );
 
-            // Время истекло — готовим превращение
+            // Р’СЂРµРјСЏ РІС‹С€Р»Рѕ вЂ” РїРѕСЂР° РєРѕРЅРІРµСЂС‚РёСЂРѕРІР°С‚СЊСЃСЏ
             if (infection.ValueRO.TimeRemaining <= 0f)
             {
                 ecb.AddComponent<NPCConversionRequest>(entity);
