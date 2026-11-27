@@ -84,6 +84,9 @@ public class NPCAuthoring : MonoBehaviour
             AddBuffer<NPCInfectionHitRequest>(entity);
 
             AddComponent<NPCTreatmentRequest>(entity);
+
+            AddComponent(entity, new NPCFleeState());
+            AddBuffer<NPCFleeThreatSnapshot>(entity);
         }
     }
 
